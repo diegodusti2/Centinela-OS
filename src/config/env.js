@@ -18,6 +18,16 @@ function asBoolean(value, fallback = false) {
 }
 
 const configuredDbPath = process.env.DB_PATH || './data/centinela.db';
+const publicDashboardUrl = (process.env.PUBLIC_DASHBOARD_URL || process.env.RENDER_EXTERNAL_URL || 'http://192.168.0.15:3000')
+  .trim()
+  .replace(/\/$/, '');
+const corsOrigins = Array.from(new Set([
+  ...(process.env.CORS_ORIGINS || 'http://localhost:3000,http://127.0.0.1:3000')
+    .split(',')
+    .map((origin) => origin.trim().replace(/\/$/, ''))
+    .filter(Boolean),
+  publicDashboardUrl,
+]));
 
 module.exports = Object.freeze({
   projectRoot,
@@ -30,16 +40,8 @@ module.exports = Object.freeze({
   jwtTtlSeconds: Number.parseInt(process.env.JWT_TTL_SECONDS || '28800', 10),
   adminUser: (process.env.ADMIN_USER || 'admin').trim(),
   adminPassword: process.env.ADMIN_PASSWORD || process.env.ADMIN_PASS || (isProduction ? '' : 'change-me-now'),
-  corsOrigins: (() => {
-    const origins = (process.env.CORS_ORIGINS || 'http://localhost:8080,http://127.0.0.1:8080,http://192.168.0.15:8080')
-      .split(',')
-      .map((origin) => origin.trim())
-      .filter(Boolean);
-    const dashboardUrl = process.env.PUBLIC_DASHBOARD_URL || 'http://192.168.0.15:8080';
-    if (!origins.includes(dashboardUrl)) origins.push(dashboardUrl);
-    return origins;
-  })(),
-  publicDashboardUrl: process.env.PUBLIC_DASHBOARD_URL || 'http://192.168.0.15:8080',
+  corsOrigins,
+  publicDashboardUrl,
   demoPayments: asBoolean(process.env.DEMO_PAYMENTS),
   allowLegacyBasic: asBoolean(process.env.ALLOW_LEGACY_BASIC),
   maxPageSize: Math.min(Math.max(Number.parseInt(process.env.MAX_PAGE_SIZE || '200', 10), 10), 500),
