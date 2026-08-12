@@ -1,0 +1,2 @@
+# Centinela-OS
+APP antirrobo 
