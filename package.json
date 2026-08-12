@@ -1,0 +1,29 @@
+{
+  "name": "centinela-server",
+  "version": "3.0.0",
+  "description": "API REST de Centinela OS para licencias, dispositivos y alertas con consentimiento.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "check": "node --check src/index.js && node --check src/app.js",
+    "test": "node --test test/**/*.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.21.0",
+    "helmet": "^7.1.0",
+    "leaflet": "^1.9.4",
+    "morgan": "^1.10.0",
+    "multer": "^2.2.0",
+    "ws": "^8.21.3"
+  },
+  "allowScripts": {
+    "better-sqlite3@11.10.0": true
+  }
+}

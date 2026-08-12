@@ -1,0 +1,16 @@
+.env
+!.env.example
+node_modules/
+data/
+*.db
+*.db-shm
+*.db-wal
+**/*.db*
+public/uploads/*
+public/receipts/*
+!public/uploads/.gitkeep
+!public/receipts/.gitkeep
+*.log
+npm-debug.log*
+.DS_Store
+render_test.js
