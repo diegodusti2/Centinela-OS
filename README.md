@@ -4,7 +4,7 @@ Servidor Node.js para licencias, clientes, dispositivos, ubicaciones GPS, evento
 
 ## Requisitos
 
-- Node.js 18 o superior
+- Node.js 22 LTS (fijado en `.node-version`)
 - npm
 - SQLite mediante `better-sqlite3`
 
