@@ -42,7 +42,8 @@ app.use(express.static(path.join(config.projectRoot, 'public'), { index: false }
 app.get('/pay', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'pay.html')));
 app.get('/success', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'success.html')));
 app.get('/dashboard', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'dashboard.html')));
-app.get('/', (req, res) => res.redirect('/dashboard'));
+app.get('/about', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'about.html')));
+app.get('/', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'index.html')));
 
 // Servir el dashboard HTML también en la raíz y en la carpeta public
 app.use(express.static(path.join(config.projectRoot, 'public')));
