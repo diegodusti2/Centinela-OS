@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -143,7 +143,7 @@ function initMap(lat,lng){if(!map){map=L.map('map').setView([lat||-17.4,lng||-66
 function updateMap(locations){var locs=Array.isArray(locations)?locations:[];if(!locs.length){if(!map)initMap();return}var last=locs[locs.length-1],lat=last.latitude||last.lat,lng=last.longitude||last.lng||last.lon;initMap(lat,lng);marker.setLatLng([lat,lng]);marker.setPopupContent('<b>'+evtLabel(last.event||'Ubicacion')+'</b><br>'+fmtTs(last.timestamp)+'<br>'+Number(lat).toFixed(6)+', '+Number(lng).toFixed(6));map.setView([lat,lng],map.getZoom());var pts=locs.map(function(x){return[x.latitude||x.lat,x.longitude||x.lng||x.lon]}).filter(function(p){return p[0]&&p[1]});if(pathLine&&pts.length>1)pathLine.setLatLngs(pts)}
 function flyTo(lat,lng,z){if(map){map.flyTo([lat,lng],z||16,{duration:1});marker.setLatLng([lat,lng]);marker.openPopup()}}
 
-function fmtDate(ts){if(!ts)return'-';try{var d=new Date(ts.indexOf('T')>0?ts:ts.replace(' ','T'));return d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}catch(e){return ts}}
+function parseServerTs(ts){var t=(ts.indexOf('T')>0?ts:ts.replace(' ','T')).trim();if(!/[zZ]$|[+-]\d\d:?\d\d$/.test(t)){t+='Z'}return new Date(t)}function fmtDate(ts){if(!ts)return'-';try{var d=parseServerTs(ts);return d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}catch(e){return ts}}
 function fmtTs(ts){return fmtDate(ts)}
 function evtLabel(t){var m={ANTI_SIM:'SIM extraida',INTRUDER:'Intruso',MOTION:'Movimiento',BATTERY_LOW:'Bateria baja',STATUS:'Estado',jalon_detectado:'Jalon detectado',fuga_detectada:'Fuga en curso',rastreo_en_vivo:'Rastreo en vivo',remote_locate:'Localizacion remota',intruso_senuelo:'Senuelo intruso',anti_sim:'SIM extraida'};return m[t]||t||'Evento'}
 

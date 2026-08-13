@@ -13,9 +13,14 @@ function generateReport(req, res) {
   const commands = db.prepare('SELECT * FROM commands WHERE device_id = ? ORDER BY created_at DESC LIMIT 50').all(deviceId);
   const licenses = db.prepare('SELECT * FROM licenses WHERE device_id = ? ORDER BY created_at DESC').all(deviceId);
 
-  const fmt = (ts) => {
+  const fmt = (ts, lon) => {
     if (!ts) return '-';
-    try { return new Date(ts.includes('T') ? ts : ts.replace(' ', 'T')).toLocaleString('es-BO', { timeZone: 'America/La_Paz' }); } catch (_) { return ts; }
+    try {
+      const d = new Date(ts.includes('T') ? ts : ts.replace(' ', 'T'));
+      // Hora local del lugar del hecho: 1 huso (60 min) cada 15 grados de longitud
+      const offMin = lon == null || isNaN(lon) ? 0 : Math.round(lon / 15) * 60;
+      return new Date(d.getTime() + offMin * 60000).toLocaleString('es', { hour12: false });
+    } catch (_) { return ts; }
   };
 
   const evtLabel = (t) => {
@@ -73,38 +78,38 @@ a:hover{text-decoration:underline}
 <div class="info-row">
 <div class="info-item"><label>Estado</label><span class="badge ${device.online ? 'badge-green' : 'badge-red'}">${device.online ? 'ONLINE' : 'OFFLINE'}</span></div>
 <div class="info-item"><label>Escudo</label><span>${device.shield_armed ? 'Armado' : 'Desarmado'}</span></div>
-<div class="info-item"><label>Ultima vez visto</label><span>${fmt(device.last_seen)}</span></div>
+<div class="info-item"><label>Ultima vez visto</label><span>${fmt(device.last_seen, device.last_lng)}</span></div>
 </div>
 ${device.last_lat ? `<div class="info-row"><div class="info-item"><label>Ubicacion</label><span>${Number(device.last_lat).toFixed(6)}, ${Number(device.last_lng).toFixed(6)} <a href="https://www.google.com/maps?q=${device.last_lat},${device.last_lng}" target="_blank" style="color:#3b82f6;font-size:11px">[Ver mapa]</a></span></div></div>` : ''}
 </div>
 
 <div class="card">
 <h3>Licencias (${licenses.length})</h3>
-${licenses.length ? `<table><tr><th>Codigo</th><th>Estado</th><th>Duracion</th><th>Precio</th><th>Expira</th></tr>${licenses.map(l => `<tr><td style="font-family:monospace">${l.code}</td><td><span class="badge ${l.status === 'active' ? 'badge-green' : 'badge-red'}">${l.status}</span></td><td>${l.duration_months}m</td><td>$${l.price}</td><td>${fmt(l.expires_at)}</td></tr>`).join('')}</table>` : '<p class="sub">Sin licencias</p>'}
+${licenses.length ? `<table><tr><th>Codigo</th><th>Estado</th><th>Duracion</th><th>Precio</th><th>Expira</th></tr>${licenses.map(l => `<tr><td style="font-family:monospace">${l.code}</td><td><span class="badge ${l.status === 'active' ? 'badge-green' : 'badge-red'}">${l.status}</span></td><td>${l.duration_months}m</td><td>$${l.price}</td><td>${fmt(l.expires_at, device.last_lng)}</td></tr>`).join('')}</table>` : '<p class="sub">Sin licencias</p>'}
 </div>
 
 <div class="card">
 <h3>Eventos Recientes (${events.length})</h3>
-${events.length ? `<table><tr><th>Tipo</th><th>Descripcion</th><th>Ubicacion</th><th>Mapa</th><th>Fecha</th></tr>${events.slice(0, 50).map(e => `<tr><td><span class="badge badge-blue">${evtLabel(e.event_type || e.type)}</span></td><td>${e.description || '-'}</td><td>${e.latitude ? Number(e.latitude).toFixed(6)+', '+Number(e.longitude).toFixed(6) : '-'}</td><td>${e.latitude ? '<a href="https://www.google.com/maps?q='+e.latitude+','+e.longitude+'" target="_blank" style="color:#3b82f6;text-decoration:none;font-size:10px">Ver en Mapa</a>' : '-'}</td><td>${fmt(e.timestamp)}</td></tr>`).join('')}</table>` : '<p class="sub">Sin eventos</p>'}
+${events.length ? `<table><tr><th>Tipo</th><th>Descripcion</th><th>Ubicacion</th><th>Mapa</th><th>Fecha</th></tr>${events.slice(0, 50).map(e => `<tr><td><span class="badge badge-blue">${evtLabel(e.event_type || e.type)}</span></td><td>${e.description || '-'}</td><td>${e.latitude ? Number(e.latitude).toFixed(6)+', '+Number(e.longitude).toFixed(6) : '-'}</td><td>${e.latitude ? '<a href="https://www.google.com/maps?q='+e.latitude+','+e.longitude+'" target="_blank" style="color:#3b82f6;text-decoration:none;font-size:10px">Ver en Mapa</a>' : '-'}</td><td>${fmt(e.timestamp, e.longitude)}</td></tr>`).join('')}</table>` : '<p class="sub">Sin eventos</p>'}
 </div>
 
 <div class="card">
 <h3>Itinerario GPS (${locations.length})</h3>
-${locations.length ? `<table><tr><th>Evento</th><th>Latitud</th><th>Longitud</th><th>Bateria</th><th>Mapa</th><th>Fecha</th></tr>${locations.slice(0, 100).map(l => `<tr><td>${l.event || 'GPS'}</td><td>${Number(l.latitude).toFixed(6)}</td><td>${Number(l.longitude).toFixed(6)}</td><td>${l.battery_level ?? '-'}%</td><td><a href="https://www.google.com/maps?q=${l.latitude},${l.longitude}" target="_blank" style="color:#3b82f6;text-decoration:none;font-size:10px">Ver en Mapa</a></td><td>${fmt(l.timestamp)}</td></tr>`).join('')}</table>` : '<p class="sub">Sin registros</p>'}
+${locations.length ? `<table><tr><th>Evento</th><th>Latitud</th><th>Longitud</th><th>Bateria</th><th>Mapa</th><th>Fecha</th></tr>${locations.slice(0, 100).map(l => `<tr><td>${l.event || 'GPS'}</td><td>${Number(l.latitude).toFixed(6)}</td><td>${Number(l.longitude).toFixed(6)}</td><td>${l.battery_level ?? '-'}%</td><td><a href="https://www.google.com/maps?q=${l.latitude},${l.longitude}" target="_blank" style="color:#3b82f6;text-decoration:none;font-size:10px">Ver en Mapa</a></td><td>${fmt(l.timestamp, l.longitude)}</td></tr>`).join('')}</table>` : '<p class="sub">Sin registros</p>'}
 </div>
 
 <div class="card">
 <h3>Fotos de Intruso (${photos.length})</h3>
-${photos.length ? `<div style="display:flex;gap:8px;flex-wrap:wrap">${photos.map(p => `<div style="text-align:center"><img src="${baseUrl}${p.image_url}" style="width:120px;height:160px;object-fit:cover;border-radius:6px;border:1px solid #1e293b" loading="lazy"><div style="font-size:9px;color:#94a3b8;margin-top:4px">${fmt(p.timestamp)}</div></div>`).join('')}</div>` : '<p class="sub">Sin fotos</p>'}
+${photos.length ? `<div style="display:flex;gap:8px;flex-wrap:wrap">${photos.map(p => `<div style="text-align:center"><img src="${baseUrl}${p.image_url}" style="width:120px;height:160px;object-fit:cover;border-radius:6px;border:1px solid #1e293b" loading="lazy"><div style="font-size:9px;color:#94a3b8;margin-top:4px">${fmt(p.timestamp, p.longitude)}</div></div>`).join('')}</div>` : '<p class="sub">Sin fotos</p>'}
 </div>
 
 <div class="card">
 <h3>Comandos (${commands.length})</h3>
-${commands.length ? `<table><tr><th>Tipo</th><th>Estado</th><th>Resultado</th><th>Creado</th></tr>${commands.slice(0, 30).map(c => `<tr><td>${c.command_type || '-'}</td><td><span class="badge ${c.status === 'executed' ? 'badge-green' : c.status === 'failed' ? 'badge-red' : 'badge-blue'}">${c.status}</span></td><td style="font-size:10px">${c.result || '-'}</td><td>${fmt(c.created_at)}</td></tr>`).join('')}</table>` : '<p class="sub">Sin comandos</p>'}
+${commands.length ? `<table><tr><th>Tipo</th><th>Estado</th><th>Resultado</th><th>Creado</th></tr>${commands.slice(0, 30).map(c => `<tr><td>${c.command_type || '-'}</td><td><span class="badge ${c.status === 'executed' ? 'badge-green' : c.status === 'failed' ? 'badge-red' : 'badge-blue'}">${c.status}</span></td><td style="font-size:10px">${c.result || '-'}</td><td>${fmt(c.created_at, device.last_lng)}</td></tr>`).join('')}</table>` : '<p class="sub">Sin comandos</p>'}
 </div>
 
 <div class="footer">
-<p>Generado por Centinela OS v3.0 &middot; ${new Date().toLocaleString('es-BO', { timeZone: 'America/La_Paz' })}</p>
+<p>Generado por Centinela OS v3.0 &middot; ${fmt(new Date().toISOString(), device.last_lng)}</p>
 </div>
 </body>
 </html>`;
