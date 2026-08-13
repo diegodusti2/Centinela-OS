@@ -12,7 +12,7 @@ body{font-family:Inter,"Segoe UI",sans-serif;background:var(--bg);color:var(--in
 .hidden{display:none!important}
 .login-page{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 20% 10%,#dfeaff 0,#f4f7fb 38%,#eef3f9 100%)}
 .login-box{width:min(420px,100%);background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.8);border-radius:24px;padding:42px;box-shadow:0 24px 70px rgba(32,63,104,.15)}
-.login-mark{width:64px;height:64px;display:grid;place-items:center;color:#fff;background:linear-gradient(145deg,#4f8cff,#2768dc);border-radius:20px;margin:0 auto 16px;font-size:28px;font-weight:800;box-shadow:0 10px 22px #3478f633}
+.login-mark{width:64px;height:64px;display:block;border-radius:20px;margin:0 auto 16px;box-shadow:0 10px 22px #3478f633}
 .login-box h1{font-size:22px;letter-spacing:2px;font-weight:800;color:var(--ink);text-align:center}
 .login-box p{color:var(--muted);font-size:12px;text-align:center;margin:7px 0 24px}
 .login-box label{display:block;color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;margin:18px 0 7px}
@@ -21,7 +21,7 @@ body{font-family:Inter,"Segoe UI",sans-serif;background:var(--bg);color:var(--in
 .login-box .error{color:var(--red);font-size:12px;text-align:center;margin-top:12px}
 .app{width:min(1500px,100%);margin:auto;padding:22px}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 20px;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-bottom:20px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:12px}.brand-mark{width:42px;height:42px;display:grid;place-items:center;color:#fff;background:linear-gradient(145deg,#4f8cff,#2768dc);border-radius:13px;font-size:18px;font-weight:800}
+.brand{display:flex;align-items:center;gap:12px}.brand-mark{width:42px;height:42px;display:block;border-radius:13px}
 .brand-copy strong{font-size:19px}.brand-copy span{color:var(--muted);font-size:14px}
 .top-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.live-pill{display:flex;align-items:center;gap:7px;color:#1b9e68;background:#e8f8f0;padding:11px 14px;border-radius:999px;font-size:14px;font-weight:700}.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px #20b97822}
 .user-pill{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:14px;font-weight:700;padding:11px 14px;background:var(--surface-soft);border-radius:9px}.role-badge{font-size:9px;font-weight:800;color:#fff;padding:4px 7px;border-radius:5px}
@@ -58,7 +58,7 @@ body{font-family:Inter,"Segoe UI",sans-serif;background:var(--bg);color:var(--in
 <body>
 <div id="loginPage" class="login-page">
 <div class="login-box">
-<div class="login-mark">C</div>
+<img class="login-mark" src="/brand-mark.svg" alt="">
 <h1>CENTINELA OS</h1>
 <p>Centro seguro de administracion y monitoreo</p>
 <label for="user">Usuario</label><input id="user" type="text" value="admin" autocomplete="username">
@@ -69,7 +69,7 @@ body{font-family:Inter,"Segoe UI",sans-serif;background:var(--bg);color:var(--in
 
 <div id="app" class="hidden app">
 <header class="topbar">
-<div class="brand"><div class="brand-mark">C</div><div class="brand-copy"><strong>CENTINELA OS</strong><span>Centro de seguridad y recuperacion</span></div></div>
+<div class="brand"><img class="brand-mark" src="/brand-mark.svg" alt=""><div class="brand-copy"><strong>CENTINELA OS</strong><span>Centro de seguridad y recuperacion</span></div></div>
 <div class="top-actions"><div class="live-pill"><i class="live-dot"></i>Canal seguro</div><div class="user-pill"><span id="userLabel"></span><span id="roleBadge" class="role-badge"></span></div><button class="top-btn qr" onclick="showQR()">QR de pago</button><button class="top-btn" onclick="doLogout()">Cerrar sesion</button></div>
 </header>
 <div class="tabs" id="tabsBar"><button class="tab sel" id="tabAd" onclick="showTab('admin')">Administracion</button><button class="tab" id="tabCl" onclick="showTab('client')">Monitoreo</button></div>

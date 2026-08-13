@@ -2,6 +2,10 @@
 * { box-sizing: border-box; }
 body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px; background: linear-gradient(180deg, #ffffff, #f5f7fb); }
 .card { width: min(100%, 480px); padding: 32px; border: 1px solid #e2e8f0; border-radius: 24px; background: #ffffff; box-shadow: 0 8px 30px rgba(15, 23, 42, .08); }
+.site-brand { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 24px; color: #0f172a; font-size: 13px; font-weight: 800; letter-spacing: .16em; text-decoration: none; }
+.site-brand:hover { text-decoration: none; }
+.site-brand img { width: 36px; height: 36px; display: block; }
+.site-brand b { color: #2563eb; }
 .eyebrow { margin: 0 0 12px; color: #2563eb; font-size: 11px; font-weight: 800; letter-spacing: .16em; }
 h1 { margin: 0; font-size: clamp(28px, 6vw, 40px); line-height: 1.05; color: #0f172a; }
 .intro, .note { color: #475569; font-size: 14px; line-height: 1.6; }

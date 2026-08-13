@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="brand-title">
+  <title id="brand-title">Centinela OS</title>
+  <rect width="64" height="64" rx="18" fill="#2563EB"/>
+  <path d="M47 18.5C38 10.5 24 11.5 16.5 20.5C8 30 9.5 43.5 19 51C27 57.5 39 55 47 45.5" fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>
+</svg>

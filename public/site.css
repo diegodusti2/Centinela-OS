@@ -4,8 +4,11 @@ body { min-height: 100vh; background: linear-gradient(180deg, #ffffff, #f5f7fb);
 a { color: #2563eb; text-decoration: none; }
 a:hover { text-decoration: underline; }
 .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 28px; border-bottom: 1px solid #e2e8f0; background: #ffffff; position: sticky; top: 0; z-index: 10; box-shadow: 0 1px 3px rgba(15, 23, 42, .06); }
-.nav .brand { color: #0f172a; font-weight: 800; letter-spacing: .22em; font-size: 13px; }
-.nav .brand span { color: #2563eb; }
+.nav .brand { display: inline-flex; align-items: center; gap: 10px; color: #0f172a; font-weight: 800; letter-spacing: .18em; font-size: 13px; }
+.nav .brand:hover { text-decoration: none; }
+.nav .brand-logo { width: 30px; height: 30px; display: block; }
+.nav .brand-name { color: #0f172a; }
+.nav .brand-name b { color: #2563eb; }
 .nav .links { display: flex; gap: 20px; align-items: center; }
 .nav .links a { color: #475569; font-size: 13px; font-weight: 600; }
 .nav .links a:hover { color: #2563eb; text-decoration: none; }
