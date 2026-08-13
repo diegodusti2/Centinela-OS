@@ -42,6 +42,7 @@ app.use(express.static(path.join(config.projectRoot, 'public'), { index: false }
 app.get('/pay', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'pay.html')));
 app.get('/success', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'success.html')));
 app.get('/reset', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'reset.html')));
+app.get('/download', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'downloads.html')));
 app.get('/dashboard', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'dashboard.html')));
 app.get('/about', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'about.html')));
 app.get('/', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'index.html')));
