@@ -26,6 +26,25 @@ function issueUserToken(user) {
   return `${header}.${payload}.${sign(`${header}.${payload}`)}`;
 }
 
+function issueResetToken(userId, ttlSeconds = 900) {
+  const now = Math.floor(Date.now() / 1000);
+  const header = encode({ alg: 'HS256', typ: 'JWT' });
+  const payload = encode({ sub: String(userId), type: 'reset', iat: now, exp: now + ttlSeconds });
+  return `${header}.${payload}.${sign(`${header}.${payload}`)}`;
+}
+
+function verifyResetToken(token) {
+  const parts = token.split('.');
+  if (parts.length !== 3) throw new Error('Token invalido');
+  const expected = sign(`${parts[0]}.${parts[1]}`);
+  if (!crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(parts[2]))) throw new Error('Firma invalida');
+  const payload = decode(parts[1]);
+  if (payload.type !== 'reset' || !payload.sub || !payload.exp || payload.exp <= Math.floor(Date.now() / 1000)) {
+    throw new Error('Token expirado');
+  }
+  return payload;
+}
+
 function verifyUserToken(token) {
   const parts = token.split('.');
   if (parts.length !== 3) throw new Error('Token invalido');
@@ -44,4 +63,4 @@ function hashDeviceToken(token) {
   return crypto.createHash('sha256').update(token).digest('hex');
 }
 
-module.exports = { issueUserToken, verifyUserToken, generateDeviceToken, hashDeviceToken };
+module.exports = { issueUserToken, verifyUserToken, issueResetToken, verifyResetToken, generateDeviceToken, hashDeviceToken };

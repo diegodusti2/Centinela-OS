@@ -90,6 +90,25 @@ function stats(req, res) {
   return res.json({ totalLicenses: total, activeLicenses: active, expiredLicenses: total - active, estimatedRevenue: revenue });
 }
 
+function deviceStatus(req, res) {
+  const deviceId = text(req.params.deviceId, 'deviceId', { max: 160 });
+  const row = db.prepare("SELECT * FROM licenses WHERE device_id = ? AND status = 'active' ORDER BY created_at DESC, id DESC LIMIT 1").get(deviceId);
+  if (!row) return res.json({ active: false });
+  const expiry = Date.parse(row.expires_at);
+  if (!Number.isFinite(expiry) || expiry <= Date.now()) {
+    db.prepare("UPDATE licenses SET status = 'expired' WHERE id = ? AND status = 'active'").run(row.id);
+    return res.json({ active: false });
+  }
+  const user = row.client_id ? db.prepare('SELECT * FROM users WHERE id = ?').get(row.client_id) : null;
+  return res.json({
+    active: true,
+    expiresAt: row.expires_at,
+    licenseCode: row.code,
+    pendingSetup: Boolean(user && user.setup_pending === 1),
+    username: user ? user.username : null,
+  });
+}
+
 function revoke(req, res) {
   const id = integer(req.params.id, 'id', { min: 1 });
   const result = db.prepare("UPDATE licenses SET status = 'revoked' WHERE id = ? AND status <> 'revoked'").run(id);
@@ -104,4 +123,4 @@ function deleteLicense(req, res) {
   return res.json({ success: true, id, deleted: true });
 }
 
-module.exports = { generateLicense, generateTestLicense, validateLicense, listLicenses, stats, revoke, deleteLicense, licenseView, addMonths };
+module.exports = { generateLicense, generateTestLicense, validateLicense, listLicenses, stats, revoke, deleteLicense, deviceStatus, licenseView, addMonths };

@@ -23,3 +23,7 @@ button:disabled { cursor: wait; opacity: .6; }
 .lang-menu a { display: block; padding: 8px 12px; border-radius: 8px; color: #334155; font-size: 13px; font-weight: 600; text-decoration: none; }
 .lang-menu a:hover { background: #f1f5f9; color: #2563eb; }
 .lang-menu a.lang-active { color: #2563eb; background: #dbeafe; }
+#step2 form { margin-top: 0; }
+#done h2 { margin: 6px 0 10px; font-size: 20px; }
+.go-login { display: block; text-align: center; margin-top: 18px; padding: 13px 14px; border-radius: 11px; background: #2563eb; color: #fff; font-weight: 800; text-decoration: none; }
+.go-login:hover { background: #1d4ed8; }

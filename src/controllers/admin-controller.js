@@ -38,7 +38,7 @@ function resetPassword(req, res) {
   const user = db.prepare("SELECT * FROM users WHERE id = ? AND role IN ('client', 'user')").get(id);
   if (!user) throw new HttpError(404, 'Cliente no encontrado', 'user_not_found');
   const password = randomPassword();
-  db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(hashPassword(password), id);
+  db.prepare('UPDATE users SET password_hash = ?, setup_pending = 0 WHERE id = ?').run(hashPassword(password), id);
   return res.json({ success: true, id, username: user.username, email: user.email, password });
 }
 

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Centinela OS: restablece la contraseña de tu cuenta verificando los datos personales de tu registro.">
+  <title>Centinela OS | Restablecer contraseña</title>
+  <link rel="stylesheet" href="/pay.css">
+</head>
+<body data-title-key="title.reset">
+  <div class="lang">
+    <button class="lang-btn" type="button" aria-haspopup="true" data-i18n="nav.lang">Idioma</button>
+    <div class="lang-menu">
+      <a href="#" data-lang-option="es">Español</a>
+      <a href="#" data-lang-option="en">English</a>
+      <a href="#" data-lang-option="pt">Português (Brasil)</a>
+    </div>
+  </div>
+  <main class="card">
+    <p class="eyebrow" data-i18n="reset.eyebrow">CENTINELA OS / RECUPERAR CUENTA</p>
+    <h1 data-i18n="reset.title">Restablecer contraseña</h1>
+
+    <section id="step1">
+      <p class="intro" data-i18n="reset.step1.lead">Por tu seguridad, los datos deben coincidir con los que usaste al registrar tu licencia.</p>
+      <form id="verify-form">
+        <label><span data-i18n="reset.name">Nombre completo</span><input name="name" autocomplete="name" required maxlength="120"></label>
+        <label><span data-i18n="reset.email">Correo electrónico</span><input name="email" type="email" autocomplete="email" required maxlength="254"></label>
+        <label><span data-i18n="reset.deviceId">ID del dispositivo</span><input name="deviceId" required maxlength="160" placeholder="ID mostrado por la app"></label>
+        <button type="submit" data-i18n="reset.step1.submit">Verificar datos</button>
+        <p id="status1" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section id="step2" hidden>
+      <p class="intro" data-i18n="reset.step2.lead">Ingresa la nueva contraseña para tu cuenta.</p>
+      <form id="password-form">
+        <label><span data-i18n="reset.newPassword">Nueva contraseña</span><input name="newPassword" type="password" autocomplete="new-password" required minlength="8" maxlength="128"></label>
+        <label><span data-i18n="reset.confirm">Confirmar contraseña</span><input name="confirm" type="password" autocomplete="new-password" required minlength="8" maxlength="128"></label>
+        <button type="submit" data-i18n="reset.step2.submit">Guardar nueva contraseña</button>
+        <p id="status2" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section id="done" hidden>
+      <h2 style="color:#059669" data-i18n="reset.success.title">Contraseña actualizada</h2>
+      <p class="intro" data-i18n="reset.success.lead">Ya puedes iniciar sesión con tu usuario y tu nueva contraseña.</p>
+      <a class="go-login" href="/dashboard" data-i18n="reset.success.login">Ir al panel</a>
+    </section>
+
+    <p class="note" data-i18n="reset.note">Los datos solo se usan para verificar que eres el titular del registro.</p>
+  </main>
+  <script src="/site.js"></script>
+  <script src="/reset.js" defer></script>
+</body>
+</html>

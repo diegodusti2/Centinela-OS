@@ -35,8 +35,8 @@ function approveRegistration(registrationId, issuedBy) {
   let createdUser;
 
   const transaction = db.transaction(() => {
-    const userResult = db.prepare(`INSERT INTO users (name, username, email, phone, password_hash, role)
-      VALUES (?, ?, ?, ?, ?, 'client')`).run(
+    const userResult = db.prepare(`INSERT INTO users (name, username, email, phone, password_hash, role, setup_pending)
+      VALUES (?, ?, ?, ?, ?, 'client', 1)`).run(
       registration.name, username, registration.email, registration.phone || '', hashPassword(password));
     createdUser = db.prepare('SELECT * FROM users WHERE id = ?').get(userResult.lastInsertRowid);
     db.prepare(`INSERT INTO devices (id, device_uid, user_id, name, status, online)
@@ -57,7 +57,7 @@ function approveRegistration(registrationId, issuedBy) {
     success: true,
     code,
     license: licenseView(createdLicense),
-    account: { username, password, email: registration.email },
+    account: { username, email: registration.email, pendingSetup: true },
     user: publicUser(createdUser),
   };
 }
@@ -110,7 +110,7 @@ function checkStatus(req, res) {
         status: reg.status,
         licenseCode: lic.code,
         expiresAt: lic.expires_at,
-        account: { username: user.username, email: user.email },
+        account: { username: user.username, email: user.email, pendingSetup: user.setup_pending === 1 },
       });
     }
   }

@@ -152,6 +152,7 @@ function addColumn(table, column, definition) {
   ['users', 'name', "TEXT NOT NULL DEFAULT ''"],
   ['users', 'phone', "TEXT NOT NULL DEFAULT ''"],
   ['users', 'updated_at', "TEXT NOT NULL DEFAULT ''"],
+  ['users', 'setup_pending', 'INTEGER NOT NULL DEFAULT 0'],
   ['devices', 'device_uid', "TEXT NOT NULL DEFAULT ''"],
   ['devices', 'user_id', 'INTEGER'],
   ['devices', 'android_version', "TEXT NOT NULL DEFAULT ''"],

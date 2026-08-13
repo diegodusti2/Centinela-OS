@@ -2,7 +2,7 @@ const db = require('../db');
 const { HttpError } = require('../utils/http');
 const { email, password, text, object, plan } = require('../utils/validation');
 const { hashPassword, verifyPassword, needsRehash } = require('../utils/password');
-const { issueUserToken } = require('../utils/token');
+const { issueUserToken, issueResetToken, verifyResetToken } = require('../utils/token');
 const { publicUser } = require('../utils/users');
 const { PLANS } = require('../constants');
 
@@ -94,4 +94,73 @@ function logout(req, res) {
   return res.json({ success: true });
 }
 
-module.exports = { registerRequest, login, profile, updateProfile, logout };
+function setupAccount(req, res) {
+  const deviceId = text(req.body.deviceId, 'deviceId', { max: 160 });
+  const licenseCode = text(req.body.licenseCode || req.body.code, 'licenseCode', { max: 80 }).toUpperCase();
+  const requestedUsername = text(req.body.username, 'username', { max: 80 });
+  const newPassword = password(req.body.password);
+  if (!/^[a-zA-Z0-9._-]{3,80}$/.test(requestedUsername)) {
+    throw new HttpError(400, 'username solo puede contener letras, numeros, punto, guion y guion bajo', 'validation_error');
+  }
+
+  const lic = db.prepare('SELECT * FROM licenses WHERE code = ?').get(licenseCode);
+  if (!lic) throw new HttpError(404, 'Licencia no reconocida', 'license_not_found');
+  const expiry = Date.parse(lic.expires_at);
+  if (lic.status === 'revoked' || lic.status === 'expired' || !Number.isFinite(expiry) || expiry <= Date.now()) {
+    throw new HttpError(403, 'Licencia vencida o revocada', 'license_invalid');
+  }
+  if (lic.device_id && lic.device_id !== deviceId) throw new HttpError(403, 'Licencia de otro dispositivo', 'license_mismatch');
+  if (!lic.client_id) throw new HttpError(400, 'La licencia no tiene cuenta asociada', 'license_no_account');
+  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(lic.client_id);
+  if (!user) throw new HttpError(404, 'Cuenta no encontrada', 'user_not_found');
+  if (user.setup_pending !== 1) throw new HttpError(409, 'Esta cuenta ya fue configurada', 'account_configured');
+
+  const conflict = db.prepare('SELECT id FROM users WHERE lower(username) = lower(?) AND id <> ?').get(requestedUsername, user.id);
+  if (conflict) throw new HttpError(409, 'Ese usuario ya esta en uso', 'username_taken');
+
+  db.prepare(`UPDATE users SET username = ?, password_hash = ?, setup_pending = 0, updated_at = datetime('now') WHERE id = ?`)
+    .run(requestedUsername, hashPassword(newPassword), user.id);
+  const updated = db.prepare('SELECT * FROM users WHERE id = ?').get(user.id);
+  const safe = publicUser(updated);
+  return res.json({ token: issueUserToken(updated), user: safe, username: safe.username, role: safe.role, email: safe.email });
+}
+
+function normalizeName(value) {
+  return String(value || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+function resetRequest(req, res) {
+  const name = text(req.body.name, 'name', { max: 120 });
+  const userEmail = email(req.body.email);
+  const deviceId = text(req.body.deviceId, 'deviceId', { max: 160 });
+
+  const user = db.prepare('SELECT * FROM users WHERE lower(email) = lower(?)').get(userEmail);
+  const device = user ? db.prepare('SELECT * FROM devices WHERE id = ? AND user_id = ?').get(deviceId, user.id) : null;
+  const registration = db.prepare("SELECT * FROM registrations WHERE lower(email) = lower(?) AND device_id = ? AND status = 'approved' ORDER BY id DESC LIMIT 1").get(userEmail, deviceId);
+  const userMatches = Boolean(user && normalizeName(user.name) === normalizeName(name));
+  const regMatches = Boolean(registration && normalizeName(registration.name) === normalizeName(name));
+  if (!user || !device || (!userMatches && !regMatches)) {
+    throw new HttpError(400, 'Los datos no coinciden con los del registro', 'identity_mismatch');
+  }
+
+  const resetToken = issueResetToken(user.id);
+  return res.json({ success: true, resetToken, username: user.username });
+}
+
+function resetPassword(req, res) {
+  const resetToken = text(req.body.resetToken || req.body.token, 'resetToken', { max: 500 });
+  const newPassword = password(req.body.newPassword || req.body.password);
+  let payload;
+  try {
+    payload = verifyResetToken(resetToken);
+  } catch (_) {
+    throw new HttpError(400, 'El enlace de restablecimiento no es valido o expiro', 'invalid_reset_token');
+  }
+  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(Number(payload.sub));
+  if (!user) throw new HttpError(404, 'Cuenta no encontrada', 'user_not_found');
+  db.prepare(`UPDATE users SET password_hash = ?, setup_pending = 0, updated_at = datetime('now') WHERE id = ?`)
+    .run(hashPassword(newPassword), user.id);
+  return res.json({ success: true, username: user.username });
+}
+
+module.exports = { registerRequest, login, profile, updateProfile, logout, setupAccount, resetRequest, resetPassword };

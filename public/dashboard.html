@@ -64,6 +64,7 @@ body{font-family:Inter,"Segoe UI",sans-serif;background:var(--bg);color:var(--in
 <label for="user">Usuario</label><input id="user" type="text" value="admin" autocomplete="username">
 <label for="pass">Contrasena</label><input id="pass" type="password" value="" autocomplete="current-password">
 <button onclick="doLogin()">Iniciar sesion</button><p class="error" id="loginErr"></p>
+<p style="text-align:center;margin-top:14px"><a href="/reset" style="font-size:12px;color:#2563eb">Olvidaste tu contrasena? Restablecela aqui</a></p>
 </div></div>
 
 <div id="app" class="hidden app">
@@ -147,7 +148,7 @@ function parseServerTs(ts){var t=(ts.indexOf('T')>0?ts:ts.replace(' ','T')).trim
 function fmtTs(ts){return fmtDate(ts)}
 function evtLabel(t){var m={ANTI_SIM:'SIM extraida',INTRUDER:'Intruso',MOTION:'Movimiento',BATTERY_LOW:'Bateria baja',STATUS:'Estado',jalon_detectado:'Jalon detectado',fuga_detectada:'Fuga en curso',rastreo_en_vivo:'Rastreo en vivo',remote_locate:'Localizacion remota',intruso_senuelo:'Senuelo intruso',anti_sim:'SIM extraida'};return m[t]||t||'Evento'}
 
-async function approve(id){try{var r=await api('/api/admin/registrations/'+id+'/approve',{method:'POST'});alert('APROBADA\nUsuario: '+r.account.username+'\nPassword: '+r.account.password+'\nLicencia: '+r.code);loadAdmin()}catch(e){alert(e.message)}}
+async function approve(id){try{var r=await api('/api/admin/registrations/'+id+'/approve',{method:'POST'});alert('APROBADA\nUsuario: '+r.account.username+'\nLicencia: '+r.code+'\n\nEl propietario configura su contrasena en la app (pantalla de activacion).');loadAdmin()}catch(e){alert(e.message)}}
 async function reject(id){try{await api('/api/admin/registrations/'+id+'/reject',{method:'POST'});loadAdmin()}catch(e){alert(e.message)}}
 async function genLic(){var did=document.getElementById('licDid').value;if(!did)return alert('ID requerido');try{var r=await api('/api/licenses/generate',{method:'POST',body:JSON.stringify({deviceId:did,durationMonths:parseInt(document.getElementById('licDur').value),customerName:document.getElementById('licNm').value,customerEmail:document.getElementById('licEm').value})});document.getElementById('licRes').innerHTML='<div class="creds">Licencia: <b>'+r.code+'</b><br>Usuario: '+r.account.username+' / '+r.account.password+'</div>';loadAdmin()}catch(e){alert(e.message)}}
 async function regClient(){var n=document.getElementById('regNm').value,e=document.getElementById('regEm').value,d=document.getElementById('regDid').value;if(!n||!e||!d)return alert('Completa todos los campos');try{var r=await api('/api/register',{method:'POST',body:JSON.stringify({name:n,email:e,phone:document.getElementById('regPh').value,deviceId:d,plan:1})});document.getElementById('regRes').textContent='Solicitud #'+r.registrationId+' creada.';loadAdmin()}catch(x){document.getElementById('regRes').textContent='Error: '+x.message}}
