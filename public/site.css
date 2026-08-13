@@ -9,8 +9,8 @@ a:hover { text-decoration: underline; }
 .nav .links { display: flex; gap: 20px; align-items: center; }
 .nav .links a { color: #475569; font-size: 13px; font-weight: 600; }
 .nav .links a:hover { color: #2563eb; text-decoration: none; }
-.nav .btn { background: #2563eb; color: #fff; padding: 9px 16px; border-radius: 10px; font-weight: 700; }
-.nav .btn:hover { background: #1d4ed8; color: #fff; text-decoration: none; }
+.nav .links a.btn { background: #2563eb; color: #fff; padding: 9px 16px; border-radius: 10px; font-weight: 700; }
+.nav .links a.btn:hover { background: #1d4ed8; color: #fff; text-decoration: none; }
 .wrap { max-width: 1080px; margin: 0 auto; padding: 48px 28px 64px; }
 .hero { text-align: center; padding: 26px 0 40px; }
 .hero .eyebrow { color: #2563eb; font-size: 11px; font-weight: 800; letter-spacing: .18em; margin-bottom: 14px; }
