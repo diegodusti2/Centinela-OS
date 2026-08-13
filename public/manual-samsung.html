@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Manual visual de instalación y activación de Centinela OS para teléfonos Samsung.">
+  <title>Centinela OS | Manual Samsung</title>
+  <link rel="stylesheet" href="/site.css">
+  <style>
+    .manual-actions { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin:0 auto 32px; }
+    .manual-action { border:0; border-radius:12px; padding:13px 20px; background:#2563eb; color:#fff; font:inherit; font-weight:800; cursor:pointer; }
+    .manual-action.secondary { background:#eaf1ff; color:#2563eb; }
+    .manual-grid { display:grid; gap:18px; }
+    .manual-step { display:grid; grid-template-columns:minmax(0, 1fr) minmax(220px, 360px); gap:24px; align-items:center; padding:24px; border:1px solid #e2e8f0; border-radius:20px; background:#fff; box-shadow:0 2px 8px rgba(15,23,42,.06); }
+    .manual-step:nth-child(even) { grid-template-columns:minmax(220px, 360px) minmax(0, 1fr); }
+    .manual-step:nth-child(even) .manual-copy { order:2; }
+    .manual-step:nth-child(even) figure { order:1; }
+    .manual-number { display:inline-grid; place-items:center; width:34px; height:34px; margin-bottom:12px; border-radius:10px; background:#dbeafe; color:#2563eb; font-weight:900; }
+    .manual-copy h3 { margin-bottom:8px; color:#0f172a; font-size:21px; }
+    .manual-copy p { color:#475569; font-size:15px; line-height:1.65; }
+    .manual-copy strong { color:#0f172a; }
+    .manual-step figure { margin:0; text-align:center; }
+    .manual-step img { display:block; width:min(100%, 320px); max-height:560px; object-fit:contain; margin:auto; border:1px solid #cbd5e1; border-radius:18px; box-shadow:0 8px 24px rgba(15,23,42,.12); background:#0f172a; }
+    .manual-step figcaption { margin-top:8px; color:#64748b; font-size:11px; }
+    .manual-note { margin-top:24px; }
+    @media (max-width:700px) { .manual-step,.manual-step:nth-child(even) { grid-template-columns:1fr; } .manual-step:nth-child(even) .manual-copy,.manual-step:nth-child(even) figure { order:initial; } .manual-step img { max-height:520px; } }
+    @media print { .nav,.manual-actions,.footer { display:none!important; } body { background:#fff; } .wrap { padding:20px; } .manual-step,.manual-step:nth-child(even) { break-inside:avoid; grid-template-columns:1fr 240px; } .manual-step:nth-child(even) .manual-copy { order:2; } .manual-step:nth-child(even) figure { order:1; } }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="/" aria-label="Centinela OS"><img class="brand-logo" src="/brand-mark.svg" alt=""><span class="brand-name">CENTINELA <b>OS</b></span></a>
+    <div class="links"><a href="/download">Descargas</a><a href="/">Inicio</a></div>
+  </nav>
+
+  <div class="wrap">
+    <header class="hero">
+      <p class="eyebrow">MANUAL VISUAL · SAMSUNG</p>
+      <h1>Instala y activa Centinela OS</h1>
+      <p>Guía paso a paso basada en capturas reales de Samsung. Está preparada para abrirse desde el teléfono y guardarse como PDF.</p>
+    </header>
+
+    <div class="manual-actions">
+      <button class="manual-action" type="button" onclick="window.print()">Guardar como PDF</button>
+      <a class="manual-action secondary" href="/download">Volver a descargas</a>
+    </div>
+
+    <section class="notice manual-note">
+      <h3>Antes de empezar</h3>
+      <p>Usa únicamente la APK descargada desde <strong>centinela-os.onrender.com</strong>. Este manual omite capturas que contenían nombres, correos, IDs de dispositivo, códigos de licencia o datos bancarios.</p>
+    </section>
+
+    <section class="section manual-grid">
+      <article class="manual-step">
+        <div class="manual-copy"><span class="manual-number">1</span><h3>Descarga e instala la APK</h3><p>Desde la página de descargas toca <strong>Samsung → Descargar APK</strong>. Abre el archivo en Descargas y pulsa <strong>Instalar</strong>.</p></div>
+        <figure><img src="/manual-samsung/01-instalar.jpeg" alt="Diálogo de instalación de Centinela OS en Samsung"><figcaption>Instalador de Samsung</figcaption></figure>
+      </article>
+      <article class="manual-step">
+        <div class="manual-copy"><span class="manual-number">2</span><h3>Revisa Play Protect</h3><p>Si Samsung muestra una advertencia, confirma que el archivo proviene del dominio oficial. Pulsa <strong>Entendido</strong>, abre Play Protect y ejecuta <strong>Analizar</strong>. No desactives la protección globalmente.</p></div>
+        <figure><img src="/manual-samsung/02-play-protect-bloqueo.jpeg" alt="Advertencia de Google Play Protect"><figcaption>Advertencia de Play Protect</figcaption></figure>
+      </article>
+      <article class="manual-step">
+        <div class="manual-copy"><span class="manual-number">3</span><h3>Confirma el análisis</h3><p>En Play Protect verifica el resultado <strong>No se encontraron apps dañinas</strong>. Si el teléfono mantiene el bloqueo, detén la instalación y verifica la URL de descarga.</p></div>
+        <figure><img src="/manual-samsung/04-play-protect-resultado.jpeg" alt="Play Protect sin aplicaciones dañinas"><figcaption>Resultado del análisis</figcaption></figure>
+      </article>
+      <article class="manual-step">
+        <div class="manual-copy"><span class="manual-number">4</span><h3>Acepta los términos</h3><p>Lee los Términos y Condiciones y la Política de Privacidad. Activa la casilla de aceptación y pulsa <strong>Aceptar y continuar</strong>.</p></div>
+        <figure><img src="/manual-samsung/05-terminos.jpeg" alt="Términos y condiciones de Centinela OS"><figcaption>Aceptación de términos</figcaption></figure>
+      </article>
+      <article class="manual-step">
+        <div class="manual-copy"><span class="manual-number">5</span><h3>Solicita tu licencia</h3><p>En <strong>Solicitar cuenta / licencia</strong>, escribe tu nombre y correo, selecciona el plan y conserva el número de solicitud. No publiques tu ID de dispositivo ni tus datos personales.</p></div>
+        <figure><img src="/manual-samsung/06-ubicacion.jpeg" alt="Activación guiada de permisos"><figcaption>La activación guiada comienza después de la solicitud</figcaption></figure>
+      </article>
+      <article class="manual-step">
+        <div class="manual-copy"><span class="manual-number">6</span><h3>Concede ubicación precisa</h3><p>Pulsa <strong>Activar permiso</strong>. Elige <strong>Precisa</strong> y permite la ubicación mientras la app está en uso; después, cuando Samsung lo solicite, selecciona <strong>Permitir todo el tiempo</strong>.</p></div>
+        <figure><img src="/manual-samsung/07-ubicacion-dialogo.jpeg" alt="Permiso de ubicación de Centinela OS"><figcaption>Permiso de ubicación</figcaption></figure>
+      </article>
+      <article class="manual-step">
+        <div class="manual-copy"><span class="manual-number">7</span><h3>Permite ubicación en segundo plano</h3><p>En la pantalla de permisos de Samsung selecciona <strong>Permitir todo el tiempo</strong> y deja activada la ubicación precisa.</p></div>
+        <figure><img src="/manual-samsung/08-ubicacion-siempre.jpeg" alt="Permitir ubicación siempre"><figcaption>Ubicación siempre</figcaption></figure>
+      </article>
+      <article class="manual-step">
+        <div class="manual-copy"><span class="manual-number">8</span><h3>Activa notificaciones</h3><p>Pulsa <strong>Activar permiso</strong> y elige <strong>Permitir</strong>. Las alertas visibles son necesarias para saber cuándo se detecta un evento.</p></div>
+        <figure><img src="/manual-samsung/09-notificaciones-dialogo.jpeg" alt="Permiso de notificaciones"><figcaption>Permiso de notificaciones</figcaption></figure>
+      </article>
+      <article class="manual-step">
+        <div class="manual-copy"><span class="manual-number">9</span><h3>Evita que Samsung cierre la app</h3><p>En el paso de batería pulsa <strong>Activar permiso</strong> y acepta <strong>Dejar de optimizar</strong>. Esto mantiene las alarmas y el servidor activos en segundo plano.</p></div>
+        <figure><img src="/manual-samsung/11-bateria-dialogo.jpeg" alt="Diálogo de optimización de batería"><figcaption>Permitir ejecución en segundo plano</figcaption></figure>
+      </article>
+      <article class="manual-step">
+        <div class="manual-copy"><span class="manual-number">10</span><h3>Activa Administrador del dispositivo</h3><p>Pulsa <strong>Activar administrador</strong>. En la pantalla de Android revisa las capacidades mostradas y pulsa <strong>Activar</strong>.</p></div>
+        <figure><img src="/manual-samsung/12-administrador.jpeg" alt="Activar aplicación de administración del dispositivo"><figcaption>Administrador del dispositivo</figcaption></figure>
+      </article>
+      <article class="manual-step">
+        <div class="manual-copy"><span class="manual-number">11</span><h3>Configura el intruso</h3><p>En <strong>Intruso (PIN erróneo)</strong> activa el señuelo, elige el umbral de <strong>2 o 3 intentos</strong>, selecciona Escritorio Android falso y concede la cámara cuando se solicite.</p></div>
+        <figure><img src="/manual-samsung/13-intruso-configuracion.jpeg" alt="Configuración del señuelo de intruso"><figcaption>Configuración del señuelo</figcaption></figure>
+      </article>
+      <article class="manual-step">
+        <div class="manual-copy"><span class="manual-number">12</span><h3>Permite la cámara</h3><p>Cuando aparezca la solicitud, pulsa <strong>Mientras la app está en uso</strong>. La app usa la cámara frontal únicamente cuando el señuelo se activa.</p></div>
+        <figure><img src="/manual-samsung/14-camara-dialogo.jpeg" alt="Permiso de cámara de Centinela OS"><figcaption>Permiso de cámara</figcaption></figure>
+      </article>
+      <article class="manual-step">
+        <div class="manual-copy"><span class="manual-number">13</span><h3>Activa el señuelo</h3><p>Confirma que el interruptor está verde. La app tomará una ráfaga de cinco fotos cuando se alcance el umbral configurado. Usa <strong>Probar señuelo ahora</strong> para probarlo sin introducir PINs erróneos.</p></div>
+        <figure><img src="/manual-samsung/15-intruso-activo.jpeg" alt="Señuelo de intruso activado"><figcaption>Señuelo activado</figcaption></figure>
+      </article>
+      <article class="manual-step">
+        <div class="manual-copy"><span class="manual-number">14</span><h3>Comprueba el escritorio falso</h3><p>El escritorio señuelo muestra una pantalla falsa y envía las fotos al servidor. Para usar una imagen propia, entra en <strong>Fondo del señuelo → Elegir foto</strong>.</p></div>
+        <figure><img src="/manual-samsung/16-escritorio-senuelo.jpeg" alt="Escritorio falso de Centinela OS"><figcaption>Escritorio señuelo</figcaption></figure>
+      </article>
+      <article class="manual-step">
+        <div class="manual-copy"><span class="manual-number">15</span><h3>Configura movimiento si lo deseas</h3><p>En <strong>Movimiento (jalón)</strong> activa el sensor, elige sensibilidad, intervalo y modo silencioso o con alarma.</p></div>
+        <figure><img src="/manual-samsung/17-movimiento.jpeg" alt="Configuración de detección de movimiento"><figcaption>Detección de movimiento</figcaption></figure>
+      </article>
+      <article class="manual-step">
+        <div class="manual-copy"><span class="manual-number">16</span><h3>Arma el escudo</h3><p>Regresa a la pantalla principal y pulsa <strong>Armar escudo</strong>. Comprueba que aparezca <strong>Escudo activado</strong> y que las protecciones indiquen <strong>Activa</strong>.</p></div>
+        <figure><img src="/manual-samsung/18-escudo-activo.jpeg" alt="Escudo Centinela OS activado"><figcaption>Escudo activado</figcaption></figure>
+      </article>
+    </section>
+
+    <section class="notice manual-note">
+      <h3>Prueba recomendada</h3>
+      <p>No escribas repetidamente PINs incorrectos: Samsung aplica bloqueos progresivos. Usa el botón <strong>Probar señuelo ahora</strong> y el botón <strong>Test de comunicación con servidor</strong>. Al desbloquear correctamente, el señuelo debe desaparecer y el escudo continuar armado.</p>
+    </section>
+  </div>
+
+  <footer class="footer"><div>© <span id="year">2026</span> Centinela OS · Manual Samsung</div><div class="links"><a href="/download">Descargas</a><a href="/">Inicio</a></div></footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

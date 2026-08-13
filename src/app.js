@@ -43,6 +43,7 @@ app.get('/pay', (req, res) => res.sendFile(path.join(config.projectRoot, 'public
 app.get('/success', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'success.html')));
 app.get('/reset', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'reset.html')));
 app.get('/download', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'downloads.html')));
+app.get('/manual-samsung', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'manual-samsung.html')));
 app.get('/dashboard', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'dashboard.html')));
 app.get('/about', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'about.html')));
 app.get('/', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'index.html')));
