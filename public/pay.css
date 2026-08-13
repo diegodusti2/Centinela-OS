@@ -1,17 +1,17 @@
-:root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #08111f; color: #e2e8f0; }
+:root { font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #f5f7fb; color: #0f172a; }
 * { box-sizing: border-box; }
-body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px; background: radial-gradient(circle at top right, #12345b, #08111f 55%); }
-.card { width: min(100%, 480px); padding: 32px; border: 1px solid #263b57; border-radius: 24px; background: rgba(15, 28, 47, .92); box-shadow: 0 24px 80px rgba(0, 0, 0, .28); }
-.eyebrow { margin: 0 0 12px; color: #60a5fa; font-size: 11px; font-weight: 800; letter-spacing: .16em; }
-h1 { margin: 0; font-size: clamp(28px, 6vw, 40px); line-height: 1.05; }
-.intro, .note { color: #94a3b8; font-size: 14px; line-height: 1.6; }
+body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px; background: linear-gradient(180deg, #ffffff, #f5f7fb); }
+.card { width: min(100%, 480px); padding: 32px; border: 1px solid #e2e8f0; border-radius: 24px; background: #ffffff; box-shadow: 0 8px 30px rgba(15, 23, 42, .08); }
+.eyebrow { margin: 0 0 12px; color: #2563eb; font-size: 11px; font-weight: 800; letter-spacing: .16em; }
+h1 { margin: 0; font-size: clamp(28px, 6vw, 40px); line-height: 1.05; color: #0f172a; }
+.intro, .note { color: #475569; font-size: 14px; line-height: 1.6; }
 form { display: grid; gap: 14px; margin-top: 24px; }
-label { display: grid; gap: 7px; color: #cbd5e1; font-size: 13px; font-weight: 600; }
-input, select, button { width: 100%; border: 1px solid #334b69; border-radius: 11px; padding: 13px 14px; font: inherit; }
-input, select { color: #f8fafc; background: #0b1a2d; }
+label { display: grid; gap: 7px; color: #334155; font-size: 13px; font-weight: 600; }
+input, select, button { width: 100%; border: 1px solid #cbd5e1; border-radius: 11px; padding: 13px 14px; font: inherit; }
+input, select { color: #0f172a; background: #ffffff; }
 button { cursor: pointer; border: 0; color: #fff; background: #2563eb; font-weight: 800; }
 button:disabled { cursor: wait; opacity: .6; }
 .consent { display: flex; grid-template-columns: auto 1fr; align-items: start; font-weight: 400; }
 .consent input { width: auto; margin-top: 3px; }
-#status { min-height: 20px; margin: 0; color: #6ee7b7; font-size: 13px; }
+#status { min-height: 20px; margin: 0; color: #059669; font-size: 13px; }
 .note { margin: 20px 0 0; font-size: 12px; }
