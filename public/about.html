@@ -7,72 +7,80 @@
   <title>Centinela OS | Sobre nosotros</title>
   <link rel="stylesheet" href="/site.css">
 </head>
-<body>
+<body data-title-key="title.about">
   <nav class="nav">
     <div class="brand">CENTINELA <span>OS</span></div>
     <div class="links">
-      <a href="/">Inicio</a>
-      <a href="/dashboard">Panel del propietario</a>
-      <a href="/about">Sobre nosotros</a>
-      <a href="/pay" class="btn">Solicitar licencia</a>
+      <a href="/" data-i18n="nav.home">Inicio</a>
+      <a href="/dashboard" data-i18n="nav.dashboard">Panel del propietario</a>
+      <a href="/about" data-i18n="nav.about">Sobre nosotros</a>
+      <a href="/pay" class="btn" data-i18n="nav.license">Solicitar licencia</a>
+      <div class="lang">
+        <button class="lang-btn" type="button" aria-haspopup="true" data-i18n="nav.lang">Idioma</button>
+        <div class="lang-menu">
+          <a href="#" data-lang-option="es">Español</a>
+          <a href="#" data-lang-option="en">English</a>
+          <a href="#" data-lang-option="pt">Português (Brasil)</a>
+        </div>
+      </div>
     </div>
   </nav>
 
   <div class="wrap">
     <header class="hero">
-      <p class="eyebrow">SOBRE NOSOTROS · CIBERSEGURIDAD</p>
-      <h1>Seguridad móvil con <span>criterio profesional</span></h1>
-      <p>Centinela OS nace de la convicción de que proteger un dispositivo no debe requerir vigilancia constante, sino tecnología inteligente: detección local, respuesta inmediata y control en manos del propietario.</p>
+      <p class="eyebrow" data-i18n="about.eyebrow">SOBRE NOSOTROS · CIBERSEGURIDAD</p>
+      <h1><span data-i18n="about.title1">Seguridad móvil con</span> <span data-i18n="about.title2">criterio profesional</span></h1>
+      <p data-i18n="about.lead">Centinela OS nace de la convicción de que proteger un dispositivo no debe requerir vigilancia constante, sino tecnología inteligente: detección local, respuesta inmediata y control en manos del propietario.</p>
     </header>
 
     <section class="section">
-      <h2>Nuestra misión</h2>
-      <p class="lead">Reducir el impacto del robo y la pérdida de dispositivos móviles mediante un ecosistema de seguridad accesible, técnicamente sólido y transparente.</p>
+      <h2 data-i18n="mission.title">Nuestra misión</h2>
+      <p class="lead" data-i18n="mission.lead">Reducir el impacto del robo y la pérdida de dispositivos móviles mediante un ecosistema de seguridad accesible, técnicamente sólido y transparente.</p>
       <div class="grid">
         <div class="card">
-          <h3>Detección en el origen</h3>
-          <p>Los eventos críticos —extracción de SIM, intentos de acceso, movimiento— se detectan y procesan en el propio dispositivo, sin depender de una conexión permanente a la nube.</p>
+          <h3 data-i18n="mission.1.title">Detección en el origen</h3>
+          <p data-i18n="mission.1.text">Los eventos críticos —extracción de SIM, intentos de acceso, movimiento— se detectan y procesan en el propio dispositivo, sin depender de una conexión permanente a la nube.</p>
         </div>
         <div class="card">
-          <h3>Respuesta inmediata</h3>
-          <p>Alerta sonora, pantalla de advertencia y registro de ubicación actúan en segundos, mientras el propietario recibe la notificación con el contexto completo del evento.</p>
+          <h3 data-i18n="mission.2.title">Respuesta inmediata</h3>
+          <p data-i18n="mission.2.text">Alerta sonora, pantalla de advertencia y registro de ubicación actúan en segundos, mientras el propietario recibe la notificación con el contexto completo del evento.</p>
         </div>
         <div class="card">
-          <h3>Control del propietario</h3>
-          <p>Ninguna protección se activa sin consentimiento: el titular configura, monitorea y desactiva cada módulo desde el panel, con acceso únicamente a sus propios dispositivos.</p>
+          <h3 data-i18n="mission.3.title">Control del propietario</h3>
+          <p data-i18n="mission.3.text">Ninguna protección se activa sin consentimiento: el titular configura, monitorea y desactiva cada módulo desde el panel, con acceso únicamente a sus propios dispositivos.</p>
         </div>
       </div>
     </section>
 
     <section class="section">
-      <h2>Nuestros principios</h2>
+      <h2 data-i18n="principles.title">Nuestros principios</h2>
       <div class="list">
         <div class="step">
           <div class="num">1</div>
           <div>
-            <b>Consentimiento antes que vigilancia</b>
-            <p>Somos especialistas en seguridad, no en espionaje. La plataforma solo opera sobre dispositivos que el titular ha vinculado y protegido de forma expresa.</p>
+            <b data-i18n="principles.1.title">Consentimiento antes que vigilancia</b>
+            <p data-i18n="principles.1.text">Somos especialistas en seguridad, no en espionaje. La plataforma solo opera sobre dispositivos que el titular ha vinculado y protegido de forma expresa.</p>
           </div>
         </div>
         <div class="step">
           <div class="num">2</div>
           <div>
-            <b>Privacidad por diseño</b>
-            <p>Recolectamos el mínimo de información necesario, la protegemos en tránsito y la limitamos a la finalidad del servicio: protección y recuperación.</p>
+            <b data-i18n="principles.2.title">Privacidad por diseño</b>
+            <p data-i18n="principles.2.text">Recolectamos el mínimo de información necesario, la protegemos en tránsito y la limitamos a la finalidad del servicio: protección y recuperación.</p>
           </div>
         </div>
         <div class="step">
           <div class="num">3</div>
           <div>
-            <b>Transparencia técnica</b>
-            <p>El sistema documenta su comportamiento: qué se detecta, qué se envía, cuándo y para qué. Sin funcionalidades ocultas ni accesos encubiertos.</p>
+            <b data-i18n="principles.3.title">Transparencia técnica</b>
+            <p data-i18n="principles.3.text">El sistema documenta su comportamiento: qué se detecta, qué se envía, cuándo y para qué. Sin funcionalidades ocultas ni accesos encubiertos.</p>
           </div>
         </div>
         <div class="step">
           <div class="num">4</div>
           <div>
-            <b>Mejora continua</b>
-            <p>El equipo de seguridad de Centinela OS evalúa de forma periódica los vectores de ataque, la robustez de la autenticación y la resiliencia del servicio para mantener la plataforma actualizada.</p>
+            <b data-i18n="principles.4.title">Mejora continua</b>
+            <p data-i18n="principles.4.text">El equipo de seguridad de Centinela OS evalúa de forma periódica los vectores de ataque, la robustez de la autenticación y la resiliencia del servicio para mantener la plataforma actualizada.</p>
           </div>
         </div>
       </div>
@@ -82,25 +90,26 @@
       <div class="avatar">DD</div>
       <div>
         <b>Diego Dustin Perez Viera</b>
-        <span>Desarrollador de Centinela OS · Especialista en ciberseguridad móvil y sistemas de protección con consentimiento.</span>
+        <span data-i18n="author.label">Desarrollador de Centinela OS · Especialista en ciberseguridad móvil y sistemas de protección con consentimiento.</span>
       </div>
     </section>
 
     <section class="notice">
-      <h3>Uso responsable</h3>
-      <p>Centinela OS está diseñada para la protección de dispositivos propios o autorizados. La normativa de protección de datos y privacidad puede variar según la jurisdicción; el titular de la cuenta es el responsable de asegurar que el uso de la plataforma cumple la legislación aplicable. Ante cualquier duda, contacta a nuestro equipo antes de activar el servicio.</p>
+      <h3 data-i18n="responsible.title">Uso responsable</h3>
+      <p data-i18n="responsible.p">Centinela OS está diseñada para la protección de dispositivos propios o autorizados. La normativa de protección de datos y privacidad puede variar según la jurisdicción; el titular de la cuenta es el responsable de asegurar que el uso de la plataforma cumple la legislación aplicable. Ante cualquier duda, contacta a nuestro equipo antes de activar el servicio.</p>
     </section>
   </div>
 
   <footer class="footer">
-    <div>© <span id="year">2026</span> Centinela OS · Desarrollado por Diego Dustin Perez Viera</div>
+    <div>© <span id="year">2026</span> <span data-i18n="footer.rights">Centinela OS · Desarrollado por Diego Dustin Perez Viera</span></div>
     <div class="links">
-      <a href="/">Inicio</a>
-      <a href="/about">Sobre nosotros</a>
-      <a href="/dashboard">Panel</a>
-      <a href="/pay">Licencia</a>
+      <a href="/" data-i18n="nav.home">Inicio</a>
+      <a href="/about" data-i18n="nav.about">Sobre nosotros</a>
+      <a href="/dashboard" data-i18n="nav.dashboard">Panel</a>
+      <a href="/pay" data-i18n="nav.license">Licencia</a>
     </div>
   </footer>
+  <script src="/site.js"></script>
   <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>

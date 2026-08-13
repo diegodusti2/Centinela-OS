@@ -3,25 +3,35 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Centinela OS: solicita una licencia de protección para tu dispositivo sin introducir datos de tarjeta.">
   <title>Centinela OS | Solicitar licencia</title>
   <link rel="stylesheet" href="/pay.css">
 </head>
-<body>
+<body data-title-key="title.pay">
+  <div class="lang">
+    <button class="lang-btn" type="button" aria-haspopup="true" data-i18n="nav.lang">Idioma</button>
+    <div class="lang-menu">
+      <a href="#" data-lang-option="es">Español</a>
+      <a href="#" data-lang-option="en">English</a>
+      <a href="#" data-lang-option="pt">Português (Brasil)</a>
+    </div>
+  </div>
   <main class="card">
-    <p class="eyebrow">CENTINELA OS / ACTIVACION</p>
-    <h1>Proteccion con consentimiento</h1>
-    <p class="intro">Solicita una licencia sin introducir datos de tarjeta. El pago se completa únicamente en el proveedor autorizado y el administrador valida la solicitud.</p>
+    <p class="eyebrow" data-i18n="pay.eyebrow">CENTINELA OS / ACTIVACIÓN</p>
+    <h1 data-i18n="pay.title">Protección con consentimiento</h1>
+    <p class="intro" data-i18n="pay.intro">Solicita una licencia sin introducir datos de tarjeta. El pago se completa únicamente en el proveedor autorizado y el administrador valida la solicitud.</p>
     <form id="registration-form">
-      <label>Nombre completo<input name="name" autocomplete="name" required maxlength="120"></label>
-      <label>Correo electrónico<input name="email" type="email" autocomplete="email" required maxlength="254"></label>
-      <label>ID del dispositivo<input name="deviceId" required maxlength="160" placeholder="ID mostrado por la app"></label>
-      <label>Plan<select name="plan"><option value="1">1 mes · USD 3</option><option value="6">6 meses · USD 15</option><option value="12">12 meses · USD 24</option></select></label>
-      <label class="consent"><input name="consent" type="checkbox" required> Confirmo que soy propietario o tengo autorización para proteger este dispositivo.</label>
-      <button type="submit">Enviar solicitud</button>
+      <label><span data-i18n="pay.name">Nombre completo</span><input name="name" autocomplete="name" required maxlength="120"></label>
+      <label><span data-i18n="pay.email">Correo electrónico</span><input name="email" type="email" autocomplete="email" required maxlength="254"></label>
+      <label><span data-i18n="pay.deviceId">ID del dispositivo</span><input name="deviceId" required maxlength="160" placeholder="ID mostrado por la app"></label>
+      <label><span data-i18n="pay.plan">Plan</span><select name="plan"><option value="1" data-i18n="pay.plan.1">1 mes · USD 3</option><option value="6" data-i18n="pay.plan.6">6 meses · USD 15</option><option value="12" data-i18n="pay.plan.12">12 meses · USD 24</option></select></label>
+      <label class="consent"><input name="consent" type="checkbox" required><span data-i18n="pay.consent">Confirmo que soy propietario o tengo autorización para proteger este dispositivo.</span></label>
+      <button type="submit" data-i18n="pay.submit">Enviar solicitud</button>
       <p id="status" role="status" aria-live="polite"></p>
     </form>
-    <p class="note">No envíes números de tarjeta, CVV ni contraseñas a este formulario.</p>
+    <p class="note" data-i18n="pay.note">No envíes números de tarjeta, CVV ni contraseñas a este formulario.</p>
   </main>
+  <script src="/site.js"></script>
   <script src="/pay.js" defer></script>
 </body>
 </html>
