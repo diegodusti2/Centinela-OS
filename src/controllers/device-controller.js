@@ -44,6 +44,11 @@ function getDevices(req, res) {
 
 function registerDevice(req, res) {
   const deviceId = text(req.body.deviceId || req.body.deviceUid, 'deviceId', { max: 160 });
+  // Identificadores de dispositivo: solo caracteres seguros (hex/base64url
+  // o guiones) para evitar IDs con comillas que rompan atributos HTML.
+  if (!/^[A-Za-z0-9._-]{8,160}$/.test(deviceId)) {
+    throw new HttpError(400, 'deviceId contiene caracteres no permitidos', 'validation_error');
+  }
   const name = text(req.body.deviceName || req.body.name, 'deviceName', { required: false, max: 120 }) || 'Centinela OS';
   const model = text(req.body.model, 'model', { required: false, max: 120 });
   const androidVersion = text(req.body.androidVersion, 'androidVersion', { required: false, max: 40 });
@@ -96,6 +101,9 @@ function reportLocation(req, res) {
   const batteryLevel = req.body.batteryLevel ?? req.body.battery;
   const battery = batteryLevel === undefined || batteryLevel === null ? null : integer(batteryLevel, 'battery', { min: 0, max: 100 });
   const event = text(req.body.event, 'event', { required: false, max: 40 }) || 'tracking';
+  if (!/^[a-zA-Z0-9_ .:()-]+$/.test(event)) {
+    throw new HttpError(400, 'event contiene caracteres no permitidos', 'validation_error');
+  }
 
   const transaction = db.transaction(() => {
     db.prepare(`INSERT INTO locations (device_id, latitude, longitude, altitude, accuracy, speed, bearing, battery_level, battery, event)

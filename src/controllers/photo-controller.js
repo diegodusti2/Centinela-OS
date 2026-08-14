@@ -20,8 +20,13 @@ function uploadPhoto(req, res) {
   const clean = imageBase64.replace(/^data:image\/\w+;base64,/, '');
   const buffer = Buffer.from(clean, 'base64');
   if (buffer.length > 3_000_000) throw new HttpError(400, 'Imagen demasiado grande', 'validation_error');
+  // Solo imagenes JPEG/PNG reales: evita guardar HTML/SVG como .jpg y
+  // reduce la superficie de ataques de contenido.
+  const isJpeg = buffer.length > 3 && buffer[0] === 0xFF && buffer[1] === 0xD8 && buffer[2] === 0xFF;
+  const isPng = buffer.length > 8 && buffer.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]));
+  if (!isJpeg && !isPng) throw new HttpError(400, 'Formato de imagen no permitido', 'validation_error');
 
-  const name = `${deviceId.slice(0, 12)}_${Date.now()}_${crypto.randomBytes(3).toString('hex')}.jpg`;
+  const name = `${deviceId.slice(0, 12)}_${Date.now()}_${crypto.randomBytes(16).toString('hex')}.jpg`;
   const filePath = path.join(UPLOAD_DIR, name);
   fs.writeFileSync(filePath, buffer);
 
