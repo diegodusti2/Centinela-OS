@@ -341,7 +341,7 @@
       'what.sim.text': 'Se o cartão SIM for removido, o telefone entra em alerta: tela de aviso, alarme sonoro e registro da localização do momento, reportado ao servidor quando a conectividade for restabelecida.',
       'what.pin.tag': 'TENTATIVAS DE ACESSO',
       'what.pin.title': 'Alerta de intruso',
-      'what.pin.text': 'Tras varios intentos fallidos de desbloqueo, el sistema activa el escudo de intrusión: notificación de alta prioridad, aviso al propietario, reporte del evento con ubicación y ráfaga de fotos del intruso capturadas con la cámara frontal.': 'Após várias tentativas de desbloqueio sem sucesso, o sistema ativa o escudo de intrusão: notificação de alta prioridade, aviso ao proprietário, relatório do evento com localização e uma sequência de fotos do intruso capturadas com a câmera frontal.',
+      'what.pin.text': 'Após várias tentativas de desbloqueio sem sucesso, o sistema ativa o escudo de intrusão: notificação de alta prioridade, aviso ao proprietário, relatório do evento com localização e uma sequência de fotos do intruso capturadas com a câmera frontal.',
       'what.motion.tag': 'MOVIMENTO',
       'what.motion.title': 'Detecção de puxão ou arrebatamento',
       'what.motion.text': 'Movimentos bruscos do aparelho ativam a resposta de segurança: bloqueio temporário, sirene e rastreamento da rota de deslocamento.',
