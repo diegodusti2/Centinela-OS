@@ -50,12 +50,30 @@ app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: false, limit: '16kb' }));
 app.use(morgan(config.nodeEnv === 'production' ? 'combined' : 'dev'));
 
-app.get('/health', (req, res) => res.json({
-  status: 'ok',
-  version: '3.0.0',
-  db: 'sqlite',
-  timestamp: new Date().toISOString(),
-}));
+app.get('/health', (req, res) => {
+  let dbInfo = { db: 'sqlite' };
+  try {
+    const db = require('./db');
+    const count = (table) => {
+      try { return db.prepare(`SELECT COUNT(*) AS c FROM ${table}`).get().c; } catch (_) { return -1; }
+    };
+    dbInfo = {
+      db: 'sqlite',
+      dbPathBasename: require('path').basename(require('./config/env').dbPath),
+      dbParent: require('path').basename(require('path').dirname(require('./config/env').dbPath)),
+      users: count('users'),
+      devices: count('devices'),
+      licenses: count('licenses'),
+      registrations: count('registrations'),
+    };
+  } catch (_) {}
+  return res.json({
+    status: 'ok',
+    version: '3.0.0',
+    ...dbInfo,
+    timestamp: new Date().toISOString(),
+  });
+});
 
 app.use('/api', routes);
 app.use(express.static(path.join(config.projectRoot, 'public'), { index: false }));
