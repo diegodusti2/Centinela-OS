@@ -3,7 +3,7 @@
   const dict = {
     es: {
       'nav.home': 'Inicio',
-      'nav.dashboard': 'Panel del propietario',
+      'nav.dashboard': 'Rastrea tu dispositivo',
       'nav.about': 'Sobre nosotros',
       'nav.license': 'Solicitar licencia',
       'nav.lang': 'Idioma',
@@ -65,7 +65,7 @@
       'hero.title1': 'Protege tu dispositivo.',
       'hero.title2': 'Recupera momentos.',
       'hero.lead': 'Centinela OS es una plataforma de seguridad antirrobo para Android que convierte tu teléfono en su propio guardián: detecta amenazas en el dispositivo, genera alertas en tiempo real y te permite localizar y controlar tu equipo desde cualquier navegador, siempre con tu consentimiento expreso como propietario.',
-      'cta.dashboard': 'Ir al panel del propietario',
+      'cta.dashboard': 'Rastrea tu dispositivo',
       'cta.license': 'Activar una licencia',
       'what.title': 'Qué hace por ti',
       'what.lead': 'Cada módulo se activa de forma explícita y funciona localmente en el dispositivo para no depender de una conexión constante.',
@@ -135,7 +135,7 @@
     },
     en: {
       'nav.home': 'Home',
-      'nav.dashboard': 'Owner dashboard',
+      'nav.dashboard': 'Track your device',
       'nav.about': 'About us',
       'nav.license': 'Request license',
       'nav.lang': 'Language',
@@ -197,7 +197,7 @@
       'hero.title1': 'Protect your device.',
       'hero.title2': 'Recover moments.',
       'hero.lead': 'Centinela OS is an anti-theft security platform for Android that turns your phone into its own guardian: it detects threats on the device, generates real-time alerts and lets you locate and control your device from any browser, always with your express consent as owner.',
-      'cta.dashboard': 'Go to the owner dashboard',
+      'cta.dashboard': 'Track your device',
       'cta.license': 'Activate a license',
       'what.title': 'What it does for you',
       'what.lead': 'Each module is activated explicitly and runs locally on the device, so it does not depend on a constant connection.',
@@ -267,7 +267,7 @@
     },
     pt: {
       'nav.home': 'Início',
-      'nav.dashboard': 'Painel do proprietário',
+      'nav.dashboard': 'Rastreie seu dispositivo',
       'nav.about': 'Sobre nós',
       'nav.license': 'Solicitar licença',
       'nav.lang': 'Idioma',
@@ -329,7 +329,7 @@
       'hero.title1': 'Proteja seu dispositivo.',
       'hero.title2': 'Recupere momentos.',
       'hero.lead': 'Centinela OS é uma plataforma de segurança antirroubo para Android que transforma seu telefone em seu próprio guardião: detecta ameaças no dispositivo, gera alertas em tempo real e permite localizar e controlar seu aparelho de qualquer navegador, sempre com seu consentimento expresso como proprietário.',
-      'cta.dashboard': 'Ir para o painel do proprietário',
+      'cta.dashboard': 'Rastreie seu dispositivo',
       'cta.license': 'Ativar uma licença',
       'what.title': 'O que ele faz por você',
       'what.lead': 'Cada módulo é ativado explicitamente e funciona localmente no dispositivo para não depender de uma conexão constante.',
