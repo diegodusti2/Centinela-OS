@@ -4,6 +4,7 @@ const config = require('./config/env');
 const db = require('./db');
 const app = require('./app');
 const ws = require('./ws');
+const backup = require('./utils/backup');
 const { hashPassword } = require('./utils/password');
 
 function seedAdmin() {
@@ -26,6 +27,8 @@ const server = http.createServer(app);
 
 if (require.main === module) {
   ws.init(server);
+  // Respaldo diario automatico de la base de datos (produccion).
+  if (config.isProduction) backup.scheduleDaily();
   server.listen(config.port, config.host, () => {
     console.log(`Centinela OS v3.0.0 escuchando en http://${config.host}:${config.port}`);
   });

@@ -18,6 +18,26 @@ app.use(helmet({
   crossOriginResourcePolicy: false,
 }));
 
+// CSP estricto solo para el panel: sin scripts/estilos inline y sin marcos.
+// El resto de paginas publicas mantiene la politica global.
+const dashboardCsp = helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'"],
+      imgSrc: ["'self'", 'data:', 'https://*.basemaps.cartocdn.com'],
+      connectSrc: ["'self'", 'wss:', 'ws:', 'https:'],
+      frameAncestors: ["'none'"],
+      baseUri: ["'self'"],
+      formAction: ["'self'"],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+  crossOriginOpenerPolicy: false,
+  crossOriginResourcePolicy: false,
+});
+
 app.use(cors({
   origin(origin, callback) {
     if (!origin || config.corsOrigins.includes(origin)) return callback(null, true);
@@ -44,7 +64,7 @@ app.get('/success', (req, res) => res.sendFile(path.join(config.projectRoot, 'pu
 app.get('/reset', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'reset.html')));
 app.get('/download', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'downloads.html')));
 app.get('/manual-samsung', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'manual-samsung.html')));
-app.get('/dashboard', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'dashboard.html')));
+app.get('/dashboard', dashboardCsp, (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'dashboard.html')));
 app.get('/about', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'about.html')));
 app.get('/', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'index.html')));
 

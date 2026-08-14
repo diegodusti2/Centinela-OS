@@ -431,6 +431,8 @@
         applyLanguage(el.getAttribute('data-lang-option'));
       });
     });
+    const year = document.getElementById('year');
+    if (year) year.textContent = new Date().getFullYear();
     const saved = localStorage.getItem(LANG_KEY);
     const browser = (navigator.language || 'es').toLowerCase();
     const detected = saved || (browser.startsWith('pt') ? 'pt' : browser.startsWith('en') ? 'en' : 'es');

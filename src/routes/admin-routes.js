@@ -13,5 +13,6 @@ router.post('/registrations/:id/approve', asyncHandler(registration.approve));
 router.post('/registrations/:id/reject', asyncHandler(registration.reject));
 router.delete('/users/:id', asyncHandler(admin.deleteUser));
 router.post('/reset-password/:id', asyncHandler(admin.resetPassword));
+router.post('/backup', asyncHandler(admin.backupNow));
 
 module.exports = router;

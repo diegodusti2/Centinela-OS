@@ -42,4 +42,10 @@ function resetPassword(req, res) {
   return res.json({ success: true, id, username: user.username, email: user.email, password });
 }
 
-module.exports = { stats, users, deleteUser, resetPassword };
+async function backupNow(req, res) {
+  const backup = require('../utils/backup');
+  const result = await backup.createBackup();
+  return res.status(201).json({ success: true, backup: result.name });
+}
+
+module.exports = { stats, users, deleteUser, resetPassword, backupNow };

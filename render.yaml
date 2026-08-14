@@ -3,10 +3,14 @@ services:
     name: centinela-os
     runtime: node
     branch: main
-    plan: free
+    plan: starter
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /health
+    disk:
+      name: centinela-data
+      mountPath: /data
+      sizeGB: 1
     envVars:
       - key: NODE_ENV
         value: production
@@ -21,7 +25,7 @@ services:
       - key: ADMIN_PASSWORD
         sync: false
       - key: DB_PATH
-        value: /tmp/centinela.db
+        value: /data/centinela.db
       - key: PUBLIC_DASHBOARD_URL
         sync: false
       - key: CORS_ORIGINS
