@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 520" role="img" aria-labelledby="compat-title compat-desc">
+  <title id="compat-title">Compatibilidad Android de Centinela OS</title>
+  <desc id="compat-desc">Ilustracion original de varios telefonos Android abstractos con pantallas de seguridad.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#172554"/><stop offset=".5" stop-color="#2563eb"/><stop offset="1" stop-color="#0f172a"/></linearGradient>
+    <linearGradient id="phone1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#60a5fa"/><stop offset="1" stop-color="#1d4ed8"/></linearGradient>
+    <linearGradient id="phone2" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c084fc"/><stop offset="1" stop-color="#7c3aed"/></linearGradient>
+    <linearGradient id="phone3" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#34d399"/><stop offset="1" stop-color="#047857"/></linearGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="5"/></filter>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#020617" flood-opacity=".45"/></filter>
+  </defs>
+  <rect width="1000" height="520" rx="42" fill="url(#bg)"/>
+  <circle cx="150" cy="90" r="120" fill="#38bdf8" opacity=".22" filter="url(#blur)"/>
+  <circle cx="850" cy="430" r="150" fill="#a78bfa" opacity=".24" filter="url(#blur)"/>
+  <path d="M0 390C170 300 260 480 440 380S730 230 1000 350V520H0Z" fill="#0b1226" opacity=".55"/>
+  <g transform="translate(90 92) rotate(-12 105 170)" filter="url(#shadow)">
+    <rect width="210" height="350" rx="32" fill="#020617"/><rect x="9" y="9" width="192" height="332" rx="25" fill="#0f172a"/><rect x="73" y="20" width="64" height="7" rx="3.5" fill="#334155"/>
+    <rect x="26" y="68" width="158" height="84" rx="18" fill="url(#phone1)"/><circle cx="53" cy="102" r="15" fill="#fff" opacity=".9"/><path d="M53 91L61 96L59 108L53 114L47 108L45 96Z" fill="#2563eb"/>
+    <rect x="26" y="177" width="158" height="13" rx="6.5" fill="#334155"/><rect x="26" y="205" width="105" height="9" rx="4.5" fill="#1d4ed8"/><rect x="26" y="260" width="68" height="42" rx="13" fill="#1e40af"/><rect x="106" y="260" width="78" height="42" rx="13" fill="#0ea5e9"/>
+  </g>
+  <g transform="translate(390 38) rotate(4 110 220)" filter="url(#shadow)">
+    <rect width="220" height="420" rx="38" fill="#020617"/><rect x="9" y="9" width="202" height="402" rx="30" fill="#111827"/><rect x="79" y="20" width="62" height="7" rx="3.5" fill="#334155"/>
+    <rect x="27" y="70" width="166" height="96" rx="20" fill="url(#phone2)"/><path d="M52 131C83 93 121 100 166 127" fill="none" stroke="#f5f3ff" stroke-width="5" stroke-linecap="round" opacity=".8"/><circle cx="52" cy="105" r="5" fill="#22c55e"/><text x="66" y="110" fill="#fff" font-family="Arial,sans-serif" font-size="12" font-weight="700">ESCUDO EN LINEA</text>
+    <rect x="27" y="193" width="166" height="106" rx="20" fill="#fff" opacity=".95"/><circle cx="61" cy="235" r="18" fill="#ede9fe"/><path d="M61 222L70 227L68 241L61 248L54 241L52 227Z" fill="#7c3aed"/><rect x="91" y="223" width="75" height="9" rx="4.5" fill="#0f172a"/><rect x="91" y="243" width="56" height="7" rx="3.5" fill="#94a3b8"/>
+    <rect x="27" y="331" width="76" height="38" rx="12" fill="#312e81"/><rect x="117" y="331" width="76" height="38" rx="12" fill="#1d4ed8"/>
+  </g>
+  <g transform="translate(700 100) rotate(13 105 170)" filter="url(#shadow)">
+    <rect width="210" height="350" rx="32" fill="#020617"/><rect x="9" y="9" width="192" height="332" rx="25" fill="#0f172a"/><rect x="73" y="20" width="64" height="7" rx="3.5" fill="#334155"/>
+    <rect x="26" y="68" width="158" height="84" rx="18" fill="url(#phone3)"/><circle cx="53" cy="102" r="15" fill="#ecfdf5" opacity=".9"/><path d="M53 91L61 96L59 108L53 114L47 108L45 96Z" fill="#047857"/>
+    <rect x="26" y="177" width="158" height="13" rx="6.5" fill="#334155"/><rect x="26" y="205" width="115" height="9" rx="4.5" fill="#059669"/><rect x="26" y="260" width="158" height="42" rx="13" fill="#064e3b"/>
+  </g>
+  <rect x="315" y="452" width="370" height="42" rx="21" fill="#fff" opacity=".12" stroke="#bfdbfe" stroke-opacity=".6"/>
+  <text x="500" y="479" text-anchor="middle" fill="#dbeafe" font-family="Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="2">ANDROID · PROTECCION · CONTROL</text>
+</svg>
