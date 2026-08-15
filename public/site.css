@@ -18,25 +18,13 @@ a:hover { text-decoration: underline; }
 .nav .links a.btn:hover { background: #1d4ed8; border-color: #1d4ed8; color: #fff; text-decoration: none; transform: translateY(-1px); }
 .wrap { max-width: 1080px; margin: 0 auto; padding: 48px 28px 64px; }
 .hero { text-align: center; padding: 26px 0 40px; }
-.hero-split { display: grid; grid-template-columns: minmax(0, .95fr) minmax(380px, 1.05fr); align-items: center; gap: 28px; text-align: left; padding: 20px 0 36px; }
-.hero-split .hero-copy { position: relative; z-index: 1; }
-.hero-split p { margin-left: 0; margin-right: 0; }
-.hero-split .cta { justify-content: flex-start; }
-.hero-visual { min-width: 0; position: relative; }
-.hero-visual::before { content: ''; position: absolute; inset: 12% 7% 5%; border-radius: 50%; background: radial-gradient(circle, rgba(219, 234, 254, .9), rgba(239, 246, 255, 0) 68%); filter: blur(8px); }
-.hero-visual img { display: block; position: relative; width: 100%; height: auto; }
-.compat-section { display: grid; grid-template-columns: minmax(280px, .75fr) minmax(0, 1.25fr); gap: 28px; align-items: center; padding: 28px; border: 1px solid #dbeafe; border-radius: 26px; background: linear-gradient(135deg, #f8fbff, #eff6ff); overflow: hidden; }
-.compat-copy { position: relative; z-index: 2; }
-.compat-copy h2 { max-width: 450px; margin: 4px 0 12px; font-size: clamp(25px, 3vw, 36px); line-height: 1.1; color: #0f172a; }
+.compat-section { display: block; padding: 28px; border: 1px solid #dbeafe; border-radius: 26px; background: linear-gradient(135deg, #f8fbff, #eff6ff); }
+.compat-copy { max-width: 800px; margin: 0 auto; text-align: center; }
+.compat-copy h2 { margin: 4px 0 12px; font-size: clamp(25px, 3vw, 36px); line-height: 1.1; color: #0f172a; }
 .compat-copy .lead { margin-bottom: 18px; }
 .compat-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .compat-tags span { padding: 7px 11px; border: 1px solid #bfdbfe; border-radius: 999px; color: #1d4ed8; background: rgba(255,255,255,.76); font-size: 11px; font-weight: 700; }
 .compat-note { margin-top: 16px; color: #64748b; font-size: 11px; line-height: 1.5; }
-.compat-stage { position: relative; min-width: 0; perspective: 900px; }
-.compat-stage img { display: block; width: 100%; animation: compatFloat 7s ease-in-out infinite; filter: saturate(.95); }
-.compat-glass { position: absolute; inset: 12% 6% 10%; border: 1px solid rgba(255,255,255,.7); border-radius: 28px; background: linear-gradient(120deg, rgba(255,255,255,.06), rgba(255,255,255,.22)); backdrop-filter: blur(1.5px); pointer-events: none; animation: compatGlow 5s ease-in-out infinite; }
-@keyframes compatFloat { 0%,100% { transform: translateY(0) rotateX(0deg); } 50% { transform: translateY(-8px) rotateX(1.5deg); } }
-@keyframes compatGlow { 0%,100% { opacity: .25; } 50% { opacity: .7; } }
 .hero .eyebrow { color: #2563eb; font-size: 11px; font-weight: 800; letter-spacing: .18em; margin-bottom: 14px; }
 .hero h1 { font-size: clamp(32px, 6vw, 54px); line-height: 1.08; margin-bottom: 18px; color: #0f172a; }
 .hero h1 span { color: #2563eb; }
@@ -73,8 +61,7 @@ a:hover { text-decoration: underline; }
 .footer a { color: #475569; }
 .footer a:hover { color: #2563eb; }
 @media (max-width: 640px) { .nav { flex-wrap: wrap; } .nav .links { order: 3; width: 100%; justify-content: space-between; } }
-@media (max-width: 760px) { .hero-split { grid-template-columns: 1fr; text-align: center; } .hero-split p { margin-left: auto; margin-right: auto; } .hero-split .cta { justify-content: center; } .hero-visual { max-width: 560px; margin: 0 auto; } }
-@media (max-width: 760px) { .compat-section { grid-template-columns: 1fr; padding: 20px; } .compat-copy { text-align: center; } .compat-tags { justify-content: center; } }
+@media (max-width: 760px) { .compat-section { padding: 20px; } .compat-copy { text-align: center; } .compat-tags { justify-content: center; } }
 .nav .lang { position: relative; }
 .nav .lang-btn { background: none; border: 1px solid #cbd5e1; border-radius: 999px; padding: 8px 12px; font: inherit; font-size: 12.5px; font-weight: 600; color: #0f172a; cursor: pointer; transition: all .2s ease; }
 .nav .lang-btn:hover { border-color: #2563eb; color: #2563eb; background: #eff6ff; transform: translateY(-1px); box-shadow: 0 4px 10px rgba(37, 99, 235, .12); }
