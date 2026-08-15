@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const compression = require('compression');
 const config = require('./config/env');
 const routes = require('./routes');
 const { notFound, errorHandler } = require('./middleware/error-handler');
@@ -10,6 +11,9 @@ const { notFound, errorHandler } = require('./middleware/error-handler');
 const app = express();
 app.disable('x-powered-by');
 app.set('trust proxy', config.nodeEnv === 'production');
+
+// Compresion gzip para respuestas de texto (HTML/JSON/JS/CSS).
+app.use(compression());
 
 app.use(helmet({
   contentSecurityPolicy: false,
@@ -76,7 +80,23 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/api', routes);
-app.use(express.static(path.join(config.projectRoot, 'public'), { index: false }));
+
+// Estaticos publicos: cache de 1 dia para activos versionados por contenido
+// (css/js/svg). Las carpetas uploads/receipts/downloads se sirven sin cache
+// para no entregar contenido sensible obsoleto ni romper descargas nuevas.
+app.use(express.static(path.join(config.projectRoot, 'public'), {
+  index: false,
+  maxAge: '1d',
+  setHeaders(res, filePath) {
+    if (filePath.includes(path.sep + 'uploads' + path.sep) ||
+        filePath.includes(path.sep + 'receipts' + path.sep) ||
+        filePath.includes(path.sep + 'downloads' + path.sep)) {
+      res.setHeader('Cache-Control', 'no-store');
+    } else {
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+    }
+  },
+}));
 app.get('/pay', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'pay.html')));
 app.get('/success', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'success.html')));
 app.get('/reset', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'reset.html')));
@@ -88,20 +108,6 @@ app.get('/', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 
 
 // Servir el dashboard HTML también en la raíz y en la carpeta public
 app.use(express.static(path.join(config.projectRoot, 'public')));
-
-// Dashboard web - servido desde el mismo puerto 3000
-const dashboardRoot = path.join(config.projectRoot, '..', 'centinela_dashboard', 'build', 'web');
-const fs = require('fs');
-if (fs.existsSync(dashboardRoot)) {
-  app.use(express.static(dashboardRoot));
-  // SPA fallback: cualquier ruta no-API devuelve index.html
-  app.get('*', (req, res, next) => {
-    if (req.path.startsWith('/api') || req.path.startsWith('/public')) return next();
-    const indexPath = path.join(dashboardRoot, 'index.html');
-    if (fs.existsSync(indexPath)) return res.sendFile(indexPath);
-    next();
-  });
-}
 
 app.use(notFound);
 app.use(errorHandler);
