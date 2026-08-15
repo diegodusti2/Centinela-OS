@@ -18,6 +18,8 @@
       'downloads.arch': 'Arquitectura',
       'downloads.size': 'Tamaño',
       'downloads.samsung.note': 'Variante probada en Samsung Galaxy con One UI (Android 12 o superior).',
+      'downloads.armv7.note': 'Para teléfonos antiguos con procesador de 32 bits (ARMv7).',
+
       'downloads.honor.note': 'Variante ARM 64 bits compatible con Honor MagicOS (Android 12 o superior).',
       'downloads.soon.note': 'Variante en preparación: se publicará tras las pruebas en este fabricante.',
       'downloads.huawei.note': 'Variante sin servicios de Google en preparación (AppGallery).',
@@ -164,6 +166,8 @@
       'downloads.arch': 'Architecture',
       'downloads.size': 'Size',
       'downloads.samsung.note': 'Variant tested on Samsung Galaxy with One UI (Android 12 or later).',
+      'downloads.armv7.note': 'For older phones with a 32-bit processor (ARMv7).',
+
       'downloads.honor.note': 'ARM 64-bit variant compatible with Honor MagicOS (Android 12 or later).',
       'downloads.soon.note': 'Variant in preparation: it will be published after testing on this manufacturer.',
       'downloads.huawei.note': 'Variant without Google services in preparation (AppGallery).',
@@ -310,6 +314,8 @@
       'downloads.arch': 'Arquitetura',
       'downloads.size': 'Tamanho',
       'downloads.samsung.note': 'Variante testada em Samsung Galaxy com One UI (Android 12 ou superior).',
+      'downloads.armv7.note': 'Para celulares antigos com processador de 32 bits (ARMv7).',
+
       'downloads.honor.note': 'Variante ARM 64 bits compatível com Honor MagicOS (Android 12 ou superior).',
       'downloads.soon.note': 'Variante em preparação: será publicada após os testes neste fabricante.',
       'downloads.huawei.note': 'Variante sem serviços do Google em preparação (AppGallery).',

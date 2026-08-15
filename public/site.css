@@ -71,6 +71,9 @@ a:hover { text-decoration: underline; }
 .nav .lang-menu a { display: block; padding: 8px 12px; border-radius: 8px; color: #334155; font-size: 13px; font-weight: 600; }
 .nav .lang-menu a:hover { background: #f1f5f9; color: #2563eb; text-decoration: none; }
 .nav .lang-menu a.lang-active { color: #2563eb; background: #dbeafe; }
+
+.dl-version { margin-top: 14px; color: #94a3b8; font-size: 12px; font-weight: 600; letter-spacing: .02em; }
+
 .dl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
 .dl-card { border: 1px solid #e2e8f0; border-radius: 18px; background: #ffffff; padding: 20px; box-shadow: 0 1px 3px rgba(15, 23, 42, .06); display: flex; gap: 14px; align-items: flex-start; }
 .dl-card.ready { border-color: #bfdbfe; box-shadow: 0 4px 14px rgba(37, 99, 235, .10); }
