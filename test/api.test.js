@@ -1,24 +1,28 @@
 const assert = require('node:assert/strict');
-const fs = require('node:fs');
-const os = require('node:os');
-const path = require('node:path');
 const test = require('node:test');
+const { newDb } = require('pg-mem');
 
-const databasePath = path.join(os.tmpdir(), `centinela-api-${process.pid}.db`);
 process.env.NODE_ENV = 'development';
-process.env.DB_PATH = databasePath;
 process.env.ADMIN_USER = 'admin';
 process.env.ADMIN_PASSWORD = 'test-password-123';
 process.env.JWT_SECRET = 'test-secret-with-at-least-32-characters';
 process.env.CORS_ORIGINS = 'http://localhost:8080';
 
-const app = require('../src/index');
+// PostgreSQL en memoria (pg-mem) para verificar la migracion sin servidor real.
+const mem = newDb();
+const { Pool } = mem.adapters.createPg();
 const db = require('../src/db');
+db.setPool(new Pool());
+
+const app = require('../src/index');
+const { seedAdmin } = require('../src/index');
 
 let server;
 let baseUrl;
 
 test.before(async () => {
+  await db.init();
+  await seedAdmin();
   server = app.listen(0, '127.0.0.1');
   await new Promise((resolve) => server.once('listening', resolve));
   baseUrl = `http://127.0.0.1:${server.address().port}`;
@@ -26,10 +30,7 @@ test.before(async () => {
 
 test.after(async () => {
   await new Promise((resolve) => server.close(resolve));
-  db.close();
-  for (const suffix of ['', '-wal', '-shm']) {
-    try { fs.unlinkSync(`${databasePath}${suffix}`); } catch (_) { /* already removed */ }
-  }
+  await db.close();
 });
 
 async function request(route, options = {}) {

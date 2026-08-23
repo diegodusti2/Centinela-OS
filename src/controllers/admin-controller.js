@@ -4,48 +4,50 @@ const { limit, integer } = require('../utils/validation');
 const { publicUser } = require('../utils/users');
 const { hashPassword, randomPassword } = require('../utils/password');
 
-function stats(req, res) {
-  const totalUsers = db.prepare("SELECT COUNT(*) AS count FROM users WHERE role IN ('client', 'user')").get().count;
-  const totalDevices = db.prepare('SELECT COUNT(*) AS count FROM devices').get().count;
-  const totalLicenses = db.prepare('SELECT COUNT(*) AS count FROM licenses').get().count;
-  const activeLicenses = db.prepare("SELECT COUNT(*) AS count FROM licenses WHERE status = 'active' AND expires_at > datetime('now')").get().count;
-  const estimatedRevenue = db.prepare("SELECT COALESCE(SUM(price), 0) AS value FROM licenses WHERE status <> 'revoked'").get().value;
-  const pendingRegistrations = db.prepare("SELECT COUNT(*) AS count FROM registrations WHERE status = 'pending'").get().count;
-  const monthlyRevenue = db.prepare(`SELECT substr(COALESCE(created_at, issued_at), 1, 7) AS month,
+async function stats(req, res) {
+  const totalUsers = (await db.get("SELECT COUNT(*) AS count FROM users WHERE role IN ('client', 'user')")).count;
+  const totalDevices = (await db.get('SELECT COUNT(*) AS count FROM devices')).count;
+  const totalLicenses = (await db.get('SELECT COUNT(*) AS count FROM licenses')).count;
+  const activeLicenses = (await db.get("SELECT COUNT(*) AS count FROM licenses WHERE status = 'active' AND expires_at > NOW()")).count;
+  const estimatedRevenue = (await db.get("SELECT COALESCE(SUM(price), 0) AS value FROM licenses WHERE status <> 'revoked'")).value;
+  const pendingRegistrations = (await db.get("SELECT COUNT(*) AS count FROM registrations WHERE status = 'pending'")).count;
+  const monthlyRevenue = (await db.all(`SELECT TO_CHAR(COALESCE(created_at, issued_at), 'YYYY-MM') AS month,
     COALESCE(SUM(price), 0) AS amount FROM licenses WHERE status <> 'revoked'
-    GROUP BY month ORDER BY month DESC LIMIT 12`).all().reverse();
-  return res.json({ totalUsers, totalDevices, totalLicenses, activeLicenses, estimatedRevenue, pendingRegistrations, monthlyRevenue });
+    GROUP BY month ORDER BY month DESC LIMIT 12`)).reverse();
+  return res.json({
+    totalUsers: Number(totalUsers),
+    totalDevices: Number(totalDevices),
+    totalLicenses: Number(totalLicenses),
+    activeLicenses: Number(activeLicenses),
+    estimatedRevenue: Number(estimatedRevenue),
+    pendingRegistrations: Number(pendingRegistrations),
+    monthlyRevenue,
+  });
 }
 
-function users(req, res) {
-  const rows = db.prepare(`SELECT u.*, (SELECT COUNT(*) FROM device_owners o WHERE o.user_id = u.id) AS device_count
-    FROM users u WHERE u.role IN ('client', 'user') ORDER BY u.created_at DESC LIMIT ?`).all(limit(req.query.limit, 100));
-  return res.json({ users: rows.map((row) => ({ ...publicUser(row), deviceCount: row.device_count })) });
+async function users(req, res) {
+  const rows = await db.all(`SELECT u.*, (SELECT COUNT(*) FROM device_owners o WHERE o.user_id = u.id) AS device_count
+    FROM users u WHERE u.role IN ('client', 'user') ORDER BY u.created_at DESC LIMIT $1`, [limit(req.query.limit, 100)]);
+  return res.json({ users: rows.map((row) => ({ ...publicUser(row), deviceCount: Number(row.device_count) })) });
 }
 
-function deleteUser(req, res) {
+async function deleteUser(req, res) {
   const id = integer(req.params.id, 'id', { min: 1 });
-  const user = db.prepare("SELECT id FROM users WHERE id = ? AND role IN ('client', 'user')").get(id);
+  const user = await db.get("SELECT id FROM users WHERE id = $1 AND role IN ('client', 'user')", [id]);
   if (!user) throw new HttpError(404, 'Cliente no encontrado', 'user_not_found');
-  db.prepare('DELETE FROM device_owners WHERE user_id = ?').run(id);
-  db.prepare('DELETE FROM licenses WHERE client_id = ?').run(id);
-  db.prepare('DELETE FROM users WHERE id = ?').run(id);
+  await db.run('DELETE FROM device_owners WHERE user_id = $1', [id]);
+  await db.run('DELETE FROM licenses WHERE client_id = $1', [id]);
+  await db.run('DELETE FROM users WHERE id = $1', [id]);
   return res.json({ success: true, id, deleted: true });
 }
 
-function resetPassword(req, res) {
+async function resetPassword(req, res) {
   const id = integer(req.params.id, 'id', { min: 1 });
-  const user = db.prepare("SELECT * FROM users WHERE id = ? AND role IN ('client', 'user')").get(id);
+  const user = await db.get("SELECT * FROM users WHERE id = $1 AND role IN ('client', 'user')", [id]);
   if (!user) throw new HttpError(404, 'Cliente no encontrado', 'user_not_found');
   const password = randomPassword();
-  db.prepare('UPDATE users SET password_hash = ?, setup_pending = 0 WHERE id = ?').run(hashPassword(password), id);
+  await db.run('UPDATE users SET password_hash = $1, setup_pending = 0 WHERE id = $2', [hashPassword(password), id]);
   return res.json({ success: true, id, username: user.username, email: user.email, password });
 }
 
-async function backupNow(req, res) {
-  const backup = require('../utils/backup');
-  const result = await backup.createBackup();
-  return res.status(201).json({ success: true, backup: result.name });
-}
-
-module.exports = { stats, users, deleteUser, resetPassword, backupNow };
+module.exports = { stats, users, deleteUser, resetPassword };

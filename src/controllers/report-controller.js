@@ -2,25 +2,26 @@ const db = require('../db');
 const { HttpError } = require('../utils/http');
 const { getDeviceOrThrow } = require('./device-controller');
 
-function generateReport(req, res) {
+async function generateReport(req, res) {
   const deviceId = req.params.deviceId;
-  const device = getDeviceOrThrow(deviceId);
+  const device = await getDeviceOrThrow(deviceId);
   const baseUrl = `${req.protocol}://${req.get('host')}`;
 
-  const locations = db.prepare('SELECT * FROM locations WHERE device_id = ? ORDER BY timestamp DESC LIMIT 200').all(deviceId);
-  const events = db.prepare('SELECT * FROM events WHERE device_id = ? ORDER BY timestamp DESC LIMIT 100').all(deviceId);
-  const photos = db.prepare("SELECT * FROM events WHERE device_id = ? AND event_type = 'INTRUDER' AND image_url IS NOT NULL ORDER BY timestamp DESC LIMIT 50").all(deviceId);
-  const commands = db.prepare('SELECT * FROM commands WHERE device_id = ? ORDER BY created_at DESC LIMIT 50').all(deviceId);
-  const licenses = db.prepare('SELECT * FROM licenses WHERE device_id = ? ORDER BY created_at DESC').all(deviceId);
+  const locations = await db.all('SELECT * FROM locations WHERE device_id = $1 ORDER BY timestamp DESC LIMIT 200', [deviceId]);
+  const events = await db.all('SELECT * FROM events WHERE device_id = $1 ORDER BY timestamp DESC LIMIT 100', [deviceId]);
+  const photos = await db.all("SELECT * FROM events WHERE device_id = $1 AND event_type = 'INTRUDER' AND image_url IS NOT NULL ORDER BY timestamp DESC LIMIT 50", [deviceId]);
+  const commands = await db.all('SELECT * FROM commands WHERE device_id = $1 ORDER BY created_at DESC LIMIT 50', [deviceId]);
+  const licenses = await db.all('SELECT * FROM licenses WHERE device_id = $1 ORDER BY created_at DESC', [deviceId]);
 
   const fmt = (ts, lon) => {
     if (!ts) return '-';
     try {
-      const d = new Date(ts.includes('T') ? ts : ts.replace(' ', 'T'));
+      const ms = db.toMs(ts);
+      const d = new Date(ms);
       // Hora local del lugar del hecho: 1 huso (60 min) cada 15 grados de longitud
       const offMin = lon == null || isNaN(lon) ? 0 : Math.round(lon / 15) * 60;
       return new Date(d.getTime() + offMin * 60000).toLocaleString('es', { hour12: false });
-    } catch (_) { return ts; }
+    } catch (_) { return String(ts); }
   };
 
   const evtLabel = (t) => {

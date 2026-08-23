@@ -10,9 +10,9 @@ const config = require('../config/env');
 const UPLOAD_DIR = path.join(config.projectRoot, 'public', 'uploads');
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
-function uploadPhoto(req, res) {
+async function uploadPhoto(req, res) {
   const deviceId = req.params.id;
-  getDeviceOrThrow(deviceId);
+  await getDeviceOrThrow(deviceId);
 
   const imageBase64 = text(req.body.imageBase64 || req.body.imageData || '', 'imageBase64', { max: 5_000_000 });
   if (!imageBase64) throw new HttpError(400, 'imageBase64 requerido', 'validation_error');
@@ -20,8 +20,6 @@ function uploadPhoto(req, res) {
   const clean = imageBase64.replace(/^data:image\/\w+;base64,/, '');
   const buffer = Buffer.from(clean, 'base64');
   if (buffer.length > 3_000_000) throw new HttpError(400, 'Imagen demasiado grande', 'validation_error');
-  // Solo imagenes JPEG/PNG reales: evita guardar HTML/SVG como .jpg y
-  // reduce la superficie de ataques de contenido.
   const isJpeg = buffer.length > 3 && buffer[0] === 0xFF && buffer[1] === 0xD8 && buffer[2] === 0xFF;
   const isPng = buffer.length > 8 && buffer.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]));
   if (!isJpeg && !isPng) throw new HttpError(400, 'Formato de imagen no permitido', 'validation_error');
@@ -35,9 +33,9 @@ function uploadPhoto(req, res) {
   const metadata = object(req.body.metadata || {}, 'metadata');
 
   const imageUrl = `/uploads/${name}`;
-  const result = db.prepare(`INSERT INTO events (device_id, event_type, type, metadata_json, description, latitude, longitude, image_url)
-    VALUES (?, 'INTRUDER', 'INTRUDER', ?, ?, ?, ?, ?)`).run(
-    deviceId, JSON.stringify(metadata), 'Foto capturada por intruso', latitude, longitude, imageUrl);
+  const result = await db.run(`INSERT INTO events (device_id, event_type, type, metadata_json, description, latitude, longitude, image_url)
+    VALUES ($1, 'INTRUDER', 'INTRUDER', $2, $3, $4, $5, $6) RETURNING id`,
+    [deviceId, JSON.stringify(metadata), 'Foto capturada por intruso', latitude, longitude, imageUrl]);
 
   return res.status(201).json({
     success: true,
@@ -47,10 +45,10 @@ function uploadPhoto(req, res) {
   });
 }
 
-function listPhotos(req, res) {
+async function listPhotos(req, res) {
   const deviceId = req.params.id;
-  getDeviceOrThrow(deviceId);
-  const rows = db.prepare("SELECT id, image_url, latitude, longitude, timestamp FROM events WHERE device_id = ? AND event_type = 'INTRUDER' AND image_url IS NOT NULL ORDER BY timestamp DESC LIMIT 30").all(deviceId);
+  await getDeviceOrThrow(deviceId);
+  const rows = await db.all("SELECT id, image_url, latitude, longitude, timestamp FROM events WHERE device_id = $1 AND event_type = 'INTRUDER' AND image_url IS NOT NULL ORDER BY timestamp DESC LIMIT 30", [deviceId]);
   return res.json(rows);
 }
 

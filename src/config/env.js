@@ -17,7 +17,6 @@ function asBoolean(value, fallback = false) {
   return value.toLowerCase() === 'true';
 }
 
-const configuredDbPath = process.env.DB_PATH || './data/centinela.db';
 const publicDashboardUrl = (process.env.PUBLIC_DASHBOARD_URL || process.env.RENDER_EXTERNAL_URL || 'http://192.168.0.15:3000')
   .trim()
   .replace(/\/$/, '');
@@ -35,7 +34,8 @@ module.exports = Object.freeze({
   isProduction,
   port: Number.parseInt(process.env.PORT || '3000', 10),
   host: process.env.HOST || '0.0.0.0',
-  dbPath: path.resolve(projectRoot, configuredDbPath),
+  // URL de PostgreSQL (Neon). Requerida en produccion.
+  databaseUrl: (process.env.DATABASE_URL || '').trim(),
   jwtSecret,
   jwtTtlSeconds: Number.parseInt(process.env.JWT_TTL_SECONDS || '28800', 10),
   adminUser: (process.env.ADMIN_USER || 'admin').trim(),
@@ -45,12 +45,4 @@ module.exports = Object.freeze({
   demoPayments: asBoolean(process.env.DEMO_PAYMENTS),
   allowLegacyBasic: asBoolean(process.env.ALLOW_LEGACY_BASIC),
   maxPageSize: Math.min(Math.max(Number.parseInt(process.env.MAX_PAGE_SIZE || '200', 10), 10), 500),
-  // Persistencia de la base en GitHub (plan free de Render tiene disco efimero).
-  // DB_BACKUP_REPO  = "propietario/repo" del repositorio de respaldo (privado).
-  // DB_BACKUP_TOKEN = token de acceso personal (PAT) con permiso de "Contents".
-  dbBackupRepo: (process.env.DB_BACKUP_REPO || '').trim(),
-  dbBackupToken: (process.env.DB_BACKUP_TOKEN || '').trim(),
-  dbBackupPath: (process.env.DB_BACKUP_PATH || 'centinela.db.gz').trim(),
-  dbBackupBranch: (process.env.DB_BACKUP_BRANCH || 'main').trim(),
-  dbBackupIntervalMinutes: Math.min(Math.max(Number.parseInt(process.env.DB_BACKUP_INTERVAL_MIN || '30', 10), 5), 1440),
 });

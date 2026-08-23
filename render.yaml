@@ -3,14 +3,10 @@ services:
     name: centinela-os
     runtime: node
     branch: main
-    plan: starter
+    plan: free
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /health
-    disk:
-      name: centinela-data
-      mountPath: /data
-      sizeGB: 1
     envVars:
       - key: NODE_ENV
         value: production
@@ -18,14 +14,14 @@ services:
         value: 22.14.0
       - key: HOST
         value: 0.0.0.0
+      - key: DATABASE_URL
+        sync: false
       - key: JWT_SECRET
         generateValue: true
       - key: ADMIN_USER
         value: admin
       - key: ADMIN_PASSWORD
         sync: false
-      - key: DB_PATH
-        value: /data/centinela.db
       - key: PUBLIC_DASHBOARD_URL
         sync: false
       - key: CORS_ORIGINS
@@ -34,13 +30,3 @@ services:
         value: "false"
       - key: ALLOW_LEGACY_BASIC
         value: "false"
-      - key: DB_BACKUP_REPO
-        sync: false
-      - key: DB_BACKUP_TOKEN
-        sync: false
-      - key: DB_BACKUP_PATH
-        value: centinela.db.gz
-      - key: DB_BACKUP_BRANCH
-        value: main
-      - key: DB_BACKUP_INTERVAL_MIN
-        value: "30"

@@ -1,89 +1,63 @@
-# Deploy en Render (con disco persistente y respaldos)
+# Deploy en Render (con PostgreSQL en Neon)
 
-## Opcion A: Git + Blueprint (recomendada)
+Centinela OS usa **PostgreSQL** (Neon) para que la base persista incluso en el
+plan **Free** de Render (que no tiene disco persistente). El disco efimero ya
+no es un problema: todos los datos viven en Neon.
 
-1. Crea un repositorio en GitHub y sube `centinela_server`:
+## 1. Crea la base en Neon
+
+1. Ve a [neon.tech](https://neon.tech) y crea una cuenta gratuita.
+2. Crea un proyecto (PostgreSQL 16) y una base de datos.
+3. Copia la **connection string** (empieza con `postgresql://`). La veras en el
+   dashboard como "Connection String" (usa la variante con pooler para mejor
+   rendimiento: termina en `-pooler`).
+4. El esquema (tablas e indices) se crea automaticamente al arrancar el
+   servidor, no necesitas migrar nada.
+
+## 2. Despliega en Render
+
+### Opcion A: Git + Blueprint (recomendada)
+
+1. Sube `centinela_server` a un repositorio de GitHub:
    - `git init && git add . && git commit -m "Centinela OS"`
    - `git remote add origin https://github.com/TU-USUARIO/centinela-os.git`
    - `git push -u origin main`
 
 2. En [render.com](https://render.com) > New > Blueprint > selecciona el repo.
 
-3. El blueprint (`render.yaml`) crea:
-   - Servicio web plan **Starter** (los discos persistentes requieren plan de pago, $7/mes).
-   - **Disco persistente** `/data` (1 GB) montado en el servicio.
-   - `DB_PATH=/data/centinela.db`: la base de datos **sobrevive a los deploys**.
-   - `JWT_SECRET` generado automaticamente.
-   - Al crearlo te pedira `ADMIN_PASSWORD`, `PUBLIC_DASHBOARD_URL` y `CORS_ORIGINS`.
+3. El blueprint (`render.yaml`) crea un servicio web **Free** y te pedira las
+   variables `DATABASE_URL`, `ADMIN_PASSWORD`, `PUBLIC_DASHBOARD_URL` y
+   `CORS_ORIGINS`.
 
-> Si ya tienes el servicio creado manualmente en Free, adjuntale el disco en
-> Settings > Disks > Add disk (mount path `/data`) y cambia `DB_PATH` a
-> `/data/centinela.db` en Environment. El primer deploy con disco se queda con
-> la base vacia: vuelve a crear usuarios/registros o restaura un respaldo.
-
-## Opcion B: Web Service manual
+### Opcion B: Web Service manual
 
 1. Render > New > Web Service > conecta el repo.
 2. Configura:
    - Runtime: Node
    - Build Command: `npm install`
    - Start Command: `npm start`
-   - Plan: Starter ($7/mes) para poder adjuntar disco
-3. Settings > Disks > Add disk: mount path `/data`, 1 GB.
+   - Plan: Free
+3. Settings > Environment: agrega `DATABASE_URL` con la connection string de Neon.
 
 ## Variables de entorno obligatorias (pestana Environment)
 
 | Variable | Valor |
 |---|---|
 | `NODE_ENV` | `production` |
+| `DATABASE_URL` | `postgresql://...` (connection string de Neon) |
 | `JWT_SECRET` | Generate (Render lo crea automatico) |
 | `ADMIN_USER` | `admin` |
 | `ADMIN_PASSWORD` | Tu contrasena de administrador |
-| `DB_PATH` | `/data/centinela.db` |
 | `PUBLIC_DASHBOARD_URL` | `https://TU-APP.onrender.com` |
 | `CORS_ORIGINS` | `https://TU-APP.onrender.com` |
 | `DEMO_PAYMENTS` | `false` |
 | `ALLOW_LEGACY_BASIC` | `false` |
 
-## Respaldos automaticos
+## Respaldo y recuperacion
 
-- En produccion el servidor crea un respaldo **diario** de la base en
-  `/data/backups/` (los ultimos 14 se conservan, los mas viejos se eliminan).
-- Respaldo manual inmediato (admin): `POST /api/admin/backup`.
-- Para restaurar: detener el servicio, reemplazar `/data/centinela.db` por el
-  respaldo elegido y desplegar de nuevo.
-
-## Base persistente en GitHub (plan Free)
-
-El plan **Free** de Render no tiene disco persistente: la base se borra en cada
-deploy y al despertar tras dormir. Para no perder usuarios, dispositivos y
-licencias sin pagar el plan Starter, el servidor respalda la base en un
-repositorio privado de GitHub y la restaura al arrancar.
-
-### Configuracion (una sola vez)
-
-1. Crea un repositorio **privado** vacio en GitHub, por ejemplo
-   `centinela-db-backup`.
-2. Crea un **Personal Access Token** (Settings > Developer settings > PAT):
-   - Permiso: `Contents` (Read and write).
-   - Copia el token (empieza con `ghp_`).
-3. En Render > Environment añade:
-   - `DB_BACKUP_REPO` = `TU-USUARIO/centinela-db-backup`
-   - `DB_BACKUP_TOKEN` = tu PAT
-   - (opcional) `DB_BACKUP_PATH` = `centinela.db.gz`
-   - (opcional) `DB_BACKUP_BRANCH` = `main`
-   - (opcional) `DB_BACKUP_INTERVAL_MIN` = `30`
-
-### Comportamiento
-
-- Al **arrancar**, si la base local esta vacia, descarga y restaura
-  `centinela.db.gz` desde el repositorio.
-- Cada `DB_BACKUP_INTERVAL_MIN` minutos (y al apagar) sube una copia
-  comprimida de la base.
-- Si no hay token configurado, el modulo se desactiva (no falla).
-
-> El contenido de la base es sensible (datos personales, ubicaciones). Usa un
-> repositorio **privado** y un token con el minimo alcance posible.
+- Neon incluye **point-in-time recovery** y snapshots automaticos en el plan
+  free: la base se conserva entre deploys y reinicios.
+- No se requiere disco en Render ni respaldo manual a GitHub.
 
 ## Endurecimiento de seguridad (recomendado)
 
@@ -91,8 +65,8 @@ repositorio privado de GitHub y la restaura al arrancar.
    - `JWT_SECRET`: invalida todas las sesiones existentes.
    - `ADMIN_PASSWORD`: usar 16+ caracteres, generador de contrasenas.
 2. CSP estricto activo en `/dashboard` (sin scripts/estilos inline).
-3. Los respaldos contienen datos personales: no los descargues a equipos
-   compartidos y borra los antiguos.
+3. La connection string de Neon es sensible: no la compartas ni la subas al
+   repositorio (usa `sync: false` en Render).
 
 ## URL final
 
@@ -101,7 +75,7 @@ repositorio privado de GitHub y la restaura al arrancar.
 ## Notas
 
 - **WebSocket**: Render soporta WebSockets (canal de comandos en tiempo real).
-- **Disco**: en Free el disco es temporal y la base se reinicia en cada deploy;
-  usa Starter con disco persistente para datos reales.
-- **Sleep**: el servicio Free se duerme tras 15 min sin trafico; el plan
-  Starter no se duerme.
+- **Sleep**: el servicio Free se duerme tras 15 min sin trafico; la base en Neon
+  NO se pierde (solo se pausa el servicio, no los datos).
+- **Escala**: Neon free permite ~10 proyectos y PostgreSQL completo; si el
+  volumen crece, sube el plan de Neon sin cambiar el codigo.

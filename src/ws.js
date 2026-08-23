@@ -17,40 +17,16 @@ function init(httpServer) {
     ws.on('pong', () => { ws.isAlive = true; });
 
     ws.on('message', (raw) => {
-      try {
-        const msg = JSON.parse(raw.toString());
-        const { event, data } = msg;
-
-        if (event === 'auth') {
-          const token = (data?.token || '').trim();
-          if (!token) { send(ws, 'error', { msg: 'Token requerido' }); ws.close(); return; }
-          const device = db.prepare('SELECT * FROM devices WHERE device_token_hash = ?').get(hashDeviceToken(token));
-          if (!device) { send(ws, 'error', { msg: 'Token invalido' }); ws.close(); return; }
-          deviceId = device.id;
-          authed = true;
-          sockets.set(deviceId, ws);
-          send(ws, 'authed', { deviceId });
-          console.log(`[WS] Device ${deviceId.slice(0, 12)}... connected`);
-          db.prepare("UPDATE devices SET online = 1, last_seen = datetime('now') WHERE id = ?").run(deviceId);
-          return;
-        }
-
-        if (!authed) { send(ws, 'error', { msg: 'No autenticado' }); return; }
-
-        if (event === 'cmd_result') {
-          const status = data?.status || (data?.result?.startsWith('OK') ? 'executed' : 'failed');
-          db.prepare("UPDATE commands SET status = ?, result = ?, executed_at = datetime('now') WHERE id = ? AND device_id = ? AND status IN ('pending','sent')")
-            .run(status, data?.result || '', data?.cmdId, deviceId);
-          broadcast('cmd_update', { deviceId, cmdId: data?.cmdId, status, result: data?.result });
-        }
-      } catch (_) {}
+      handleMessage(ws, raw, () => deviceId, (v) => { deviceId = v; }, (v) => { authed = v; }, () => authed)
+        .catch(() => {});
     });
 
     ws.on('close', () => {
       if (deviceId) {
         sockets.delete(deviceId);
-        db.prepare("UPDATE devices SET online = 0, last_seen = datetime('now') WHERE id = ?").run(deviceId);
-        console.log(`[WS] Device ${deviceId.slice(0, 12)}... disconnected`);
+        db.run("UPDATE devices SET online = 0, last_seen = NOW() WHERE id = $1", [deviceId])
+          .then(() => console.log(`[WS] Device ${deviceId.slice(0, 12)}... disconnected`))
+          .catch(() => {});
       }
     });
 
@@ -70,6 +46,37 @@ function init(httpServer) {
   return wss;
 }
 
+async function handleMessage(ws, raw, getDeviceId, setDeviceId, setAuthed, isAuthed) {
+  try {
+    const msg = JSON.parse(raw.toString());
+    const { event, data } = msg;
+
+    if (event === 'auth') {
+      const token = (data?.token || '').trim();
+      if (!token) { send(ws, 'error', { msg: 'Token requerido' }); ws.close(); return; }
+      const device = await db.get('SELECT * FROM devices WHERE device_token_hash = $1', [hashDeviceToken(token)]);
+      if (!device) { send(ws, 'error', { msg: 'Token invalido' }); ws.close(); return; }
+      setDeviceId(device.id);
+      setAuthed(true);
+      sockets.set(device.id, ws);
+      send(ws, 'authed', { deviceId: device.id });
+      console.log(`[WS] Device ${device.id.slice(0, 12)}... connected`);
+      await db.run("UPDATE devices SET online = 1, last_seen = NOW() WHERE id = $1", [device.id]);
+      return;
+    }
+
+    if (!isAuthed()) { send(ws, 'error', { msg: 'No autenticado' }); return; }
+
+    if (event === 'cmd_result') {
+      const deviceId = getDeviceId();
+      const status = data?.status || (data?.result?.startsWith('OK') ? 'executed' : 'failed');
+      await db.run("UPDATE commands SET status = $1, result = $2, executed_at = NOW() WHERE id = $3 AND device_id = $4 AND status IN ('pending','sent')",
+        [status, data?.result || '', data?.cmdId, deviceId]);
+      broadcast('cmd_update', { deviceId, cmdId: data?.cmdId, status, result: data?.result });
+    }
+  } catch (_) {}
+}
+
 function send(ws, event, data) {
   try { ws.send(JSON.stringify({ event, data })); } catch (_) {}
 }
@@ -87,7 +94,7 @@ function sendCommand(deviceId, command) {
     type: command.command_type || command.command,
     params: typeof command.params === 'string' ? JSON.parse(command.params || '{}') : (command.params || {}),
   });
-  db.prepare("UPDATE commands SET status = 'sent' WHERE id = ?").run(command.id);
+  db.run("UPDATE commands SET status = 'sent' WHERE id = $1", [command.id]).catch(() => {});
   return true;
 }
 

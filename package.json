@@ -13,7 +13,6 @@
     "node": "22.x"
   },
   "dependencies": {
-    "better-sqlite3": "^11.0.0",
     "compression": "^1.8.1",
     "cors": "^2.8.5",
     "dotenv": "^17.4.2",
@@ -22,9 +21,10 @@
     "leaflet": "^1.9.4",
     "morgan": "^1.10.0",
     "multer": "^2.2.0",
+    "pg": "^8.23.0",
     "ws": "^8.21.3"
   },
-  "allowScripts": {
-    "better-sqlite3@11.10.0": true
+  "devDependencies": {
+    "pg-mem": "^3.0.14"
   }
 }

@@ -27,17 +27,17 @@ const upload = multer({
   },
 });
 
-function uploadReceipt(req, res) {
+async function uploadReceipt(req, res) {
   const id = parseInt(req.params.id, 10);
   if (!id || id < 1) return res.status(400).json({ error: 'ID invalido' });
 
-  const registration = db.prepare('SELECT * FROM registrations WHERE id = ?').get(id);
+  const registration = await db.get('SELECT * FROM registrations WHERE id = $1', [id]);
   if (!registration) return res.status(404).json({ error: 'Solicitud no encontrada' });
 
   if (!req.file) return res.status(400).json({ error: 'No se recibio ninguna imagen' });
 
   const imageUrl = `/receipts/${req.file.filename}`;
-  db.prepare('UPDATE registrations SET receipt_image = ? WHERE id = ?').run(imageUrl, id);
+  await db.run('UPDATE registrations SET receipt_image = $1 WHERE id = $2', [imageUrl, id]);
 
   return res.status(201).json({ success: true, imageUrl });
 }
