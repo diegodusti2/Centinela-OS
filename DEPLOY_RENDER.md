@@ -53,6 +53,38 @@
 - Para restaurar: detener el servicio, reemplazar `/data/centinela.db` por el
   respaldo elegido y desplegar de nuevo.
 
+## Base persistente en GitHub (plan Free)
+
+El plan **Free** de Render no tiene disco persistente: la base se borra en cada
+deploy y al despertar tras dormir. Para no perder usuarios, dispositivos y
+licencias sin pagar el plan Starter, el servidor respalda la base en un
+repositorio privado de GitHub y la restaura al arrancar.
+
+### Configuracion (una sola vez)
+
+1. Crea un repositorio **privado** vacio en GitHub, por ejemplo
+   `centinela-db-backup`.
+2. Crea un **Personal Access Token** (Settings > Developer settings > PAT):
+   - Permiso: `Contents` (Read and write).
+   - Copia el token (empieza con `ghp_`).
+3. En Render > Environment añade:
+   - `DB_BACKUP_REPO` = `TU-USUARIO/centinela-db-backup`
+   - `DB_BACKUP_TOKEN` = tu PAT
+   - (opcional) `DB_BACKUP_PATH` = `centinela.db.gz`
+   - (opcional) `DB_BACKUP_BRANCH` = `main`
+   - (opcional) `DB_BACKUP_INTERVAL_MIN` = `30`
+
+### Comportamiento
+
+- Al **arrancar**, si la base local esta vacia, descarga y restaura
+  `centinela.db.gz` desde el repositorio.
+- Cada `DB_BACKUP_INTERVAL_MIN` minutos (y al apagar) sube una copia
+  comprimida de la base.
+- Si no hay token configurado, el modulo se desactiva (no falla).
+
+> El contenido de la base es sensible (datos personales, ubicaciones). Usa un
+> repositorio **privado** y un token con el minimo alcance posible.
+
 ## Endurecimiento de seguridad (recomendado)
 
 1. **Rotar secretos periodicamente** (Render > Environment > Generate):

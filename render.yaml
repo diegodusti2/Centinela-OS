@@ -34,3 +34,13 @@ services:
         value: "false"
       - key: ALLOW_LEGACY_BASIC
         value: "false"
+      - key: DB_BACKUP_REPO
+        sync: false
+      - key: DB_BACKUP_TOKEN
+        sync: false
+      - key: DB_BACKUP_PATH
+        value: centinela.db.gz
+      - key: DB_BACKUP_BRANCH
+        value: main
+      - key: DB_BACKUP_INTERVAL_MIN
+        value: "30"

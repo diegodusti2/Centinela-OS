@@ -45,4 +45,12 @@ module.exports = Object.freeze({
   demoPayments: asBoolean(process.env.DEMO_PAYMENTS),
   allowLegacyBasic: asBoolean(process.env.ALLOW_LEGACY_BASIC),
   maxPageSize: Math.min(Math.max(Number.parseInt(process.env.MAX_PAGE_SIZE || '200', 10), 10), 500),
+  // Persistencia de la base en GitHub (plan free de Render tiene disco efimero).
+  // DB_BACKUP_REPO  = "propietario/repo" del repositorio de respaldo (privado).
+  // DB_BACKUP_TOKEN = token de acceso personal (PAT) con permiso de "Contents".
+  dbBackupRepo: (process.env.DB_BACKUP_REPO || '').trim(),
+  dbBackupToken: (process.env.DB_BACKUP_TOKEN || '').trim(),
+  dbBackupPath: (process.env.DB_BACKUP_PATH || 'centinela.db.gz').trim(),
+  dbBackupBranch: (process.env.DB_BACKUP_BRANCH || 'main').trim(),
+  dbBackupIntervalMinutes: Math.min(Math.max(Number.parseInt(process.env.DB_BACKUP_INTERVAL_MIN || '30', 10), 5), 1440),
 });

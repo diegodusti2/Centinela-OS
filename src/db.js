@@ -5,6 +5,14 @@ const config = require('./config/env');
 
 fs.mkdirSync(path.dirname(config.dbPath), { recursive: true });
 
+// Restaura la base desde GitHub si el disco local esta vacio (plan free de
+// Render). Debe ejecutarse antes de abrir la conexion.
+try {
+  require('./utils/dbSync').restoreIfMissing();
+} catch (e) {
+  console.error('[db] Error al restaurar respaldo:', e.message);
+}
+
 const db = new Database(config.dbPath);
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
