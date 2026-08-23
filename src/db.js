@@ -167,6 +167,7 @@ function addColumn(table, column, definition) {
   ['devices', 'shield_armed', 'INTEGER NOT NULL DEFAULT 0'],
   ['devices', 'server_url', "TEXT NOT NULL DEFAULT ''"],
   ['devices', 'device_token_hash', 'TEXT'],
+  ['devices', 'device_info_json', "TEXT NOT NULL DEFAULT ''"],
   ['licenses', 'duration_months', 'INTEGER NOT NULL DEFAULT 1'],
   ['licenses', 'price', 'REAL NOT NULL DEFAULT 0'],
   ['licenses', 'client_id', 'INTEGER'],

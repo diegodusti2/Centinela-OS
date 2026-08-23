@@ -73,6 +73,7 @@ a:hover { text-decoration: underline; }
 .dl-brand.sa { background: #1428a0; } .dl-brand.xi { background: #ff6900; } .dl-brand.hu { background: #cf0a2c; }
 .dl-brand.ho { background: #0a3d62; } .dl-brand.mo { background: #0a64c8; } .dl-brand.op { background: #0d7a4f; }
 .dl-brand.vi { background: #3f5bd9; } .dl-brand.re { background: #f7c600; color: #0f172a; } .dl-brand.on { background: #eb0028; } .dl-brand.zt { background: #0062cc; }
+.dl-brand.un { background: #3478f6; }
 .dl-info { flex: 1; min-width: 0; }
 .dl-info h3 { color: #0f172a; font-size: 16px; margin-bottom: 6px; }
 .dl-info p { color: #475569; font-size: 12.5px; line-height: 1.55; }

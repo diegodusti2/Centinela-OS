@@ -32,7 +32,13 @@ function deviceView(device) {
     lastLongitude: device.last_lng ?? null,
     shieldArmed: bool(device.shield_armed),
     registeredAt: device.registered_at || null,
+    deviceInfo: safeParseJson(device.device_info_json),
   };
+}
+
+function safeParseJson(value) {
+  if (!value) return null;
+  try { return JSON.parse(value); } catch (_) { return null; }
 }
 
 function getDevices(req, res) {
@@ -58,6 +64,7 @@ function registerDevice(req, res) {
   const battery = batteryValue === undefined || batteryValue === null || batteryValue === ''
     ? null
     : integer(batteryValue, 'batteryLevel', { min: 0, max: 100 });
+  const deviceInfoJson = text(req.body.deviceInfoJson, 'deviceInfoJson', { required: false, max: 4000 });
   const existing = db.prepare('SELECT * FROM devices WHERE id = ?').get(deviceId);
   if (existing && req.user.role !== 'admin' && req.user.role !== 'superadmin' && !userOwnsDevice(req.user, deviceId)) {
     throw new HttpError(403, 'El dispositivo ya pertenece a otra cuenta', 'device_owned');
@@ -70,11 +77,12 @@ function registerDevice(req, res) {
       db.prepare(`UPDATE devices SET device_uid = ?, name = ?, model = ?, android_version = ?, ip_address = ?,
         battery_level = COALESCE(?, battery_level), battery = COALESCE(?, battery),
         user_id = COALESCE(user_id, ?), device_token_hash = ?, status = 'online', online = 1,
-        last_seen = datetime('now') WHERE id = ?`).run(deviceId, name, model, androidVersion, ipAddress, battery, battery, req.user.id, tokenHash, deviceId);
+        device_info_json = CASE WHEN ? != '' THEN ? ELSE device_info_json END,
+        last_seen = datetime('now') WHERE id = ?`).run(deviceId, name, model, androidVersion, ipAddress, battery, battery, req.user.id, tokenHash, deviceInfoJson, deviceInfoJson, deviceId);
     } else {
       db.prepare(`INSERT INTO devices (id, device_uid, user_id, name, model, android_version, ip_address, status,
-        battery_level, battery, last_seen, online, device_token_hash) VALUES (?, ?, ?, ?, ?, ?, ?, 'online', ?, ?, datetime('now'), 1, ?)`).run(
-        deviceId, deviceId, req.user.id, name, model, androidVersion, ipAddress, battery, battery, tokenHash);
+        battery_level, battery, last_seen, online, device_token_hash, device_info_json) VALUES (?, ?, ?, ?, ?, ?, ?, 'online', ?, ?, datetime('now'), 1, ?, ?)`).run(
+        deviceId, deviceId, req.user.id, name, model, androidVersion, ipAddress, battery, battery, tokenHash, deviceInfoJson);
     }
     db.prepare('INSERT OR IGNORE INTO device_owners (device_id, user_id) VALUES (?, ?)').run(deviceId, req.user.id);
   });
