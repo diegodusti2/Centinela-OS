@@ -8,8 +8,13 @@ const config = require('./config/env');
 let poolOverride = null;
 
 function createPool() {
+  // node-postgres no soporta el parametro "channel_binding" de Neon: se elimina
+  // para que la URL de Neon se pueda usar tal cual.
+  const url = String(config.databaseUrl)
+    .replace(/[?&]channel_binding=[^&]*/g, '')
+    .replace(/\?$/, '');
   return new Pool({
-    connectionString: config.databaseUrl,
+    connectionString: url,
     ssl: { rejectUnauthorized: false },
     max: 10,
     connectionTimeoutMillis: 10000,
