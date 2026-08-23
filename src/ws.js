@@ -91,8 +91,4 @@ function sendCommand(deviceId, command) {
   return true;
 }
 
-function isDeviceOnline(deviceId) {
-  return sockets.has(deviceId);
-}
-
-module.exports = { init, sendCommand, isDeviceOnline };
+module.exports = { init, sendCommand };

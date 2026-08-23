@@ -18,7 +18,14 @@ router.post('/register', rateLimit({ windowMs: 60_000, max: 5, message: 'Demasia
 router.post('/register/upload-receipt/:id', rateLimit({ windowMs: 60_000, max: 10, message: 'Demasiados intentos de subida' }), receipt.upload.single('receipt_image'), (req, res) => receipt.uploadReceipt(req, res));
 router.get('/register/:id/status', asyncHandler(registration.checkStatus));
 router.post('/pay/confirm', asyncHandler(registration.confirmDemoPayment));
-router.get('/report/:deviceId', authenticateDeviceOrUser, asyncHandler(report.generateReport));
+router.get('/report/:deviceId', (req, res, next) => {
+  // Permite abrir el informe desde el navegador del dispositivo (la app
+  // firma la URL con su token de sesion: ?token=<jwt>).
+  if (!req.get('authorization') && req.query.token) {
+    req.headers.authorization = `Bearer ${String(req.query.token)}`;
+  }
+  authenticateDeviceOrUser(req, res, next);
+}, asyncHandler(report.generateReport));
 router.use('/devices', deviceRoutes);
 router.use('/commands', commandRoutes);
 router.use('/licenses', licenseRoutes);
