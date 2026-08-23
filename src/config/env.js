@@ -28,6 +28,11 @@ const corsOrigins = Array.from(new Set([
   publicDashboardUrl,
 ]));
 
+// TEMPORAL: valor por defecto para poder desplegar sin configurar DATABASE_URL
+// en el dashboard de Render. Se usa SOLO si no hay variable de entorno.
+// Rota la contraseña de Neon y mueve esto a Environment cuando sea posible.
+const FALLBACK_DATABASE_URL = 'postgresql://neondb_owner:npg_CHDfFET2oBg7@ep-dawn-smoke-ax52z8ln-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
+
 module.exports = Object.freeze({
   projectRoot,
   nodeEnv,
@@ -35,7 +40,7 @@ module.exports = Object.freeze({
   port: Number.parseInt(process.env.PORT || '3000', 10),
   host: process.env.HOST || '0.0.0.0',
   // URL de PostgreSQL (Neon). Requerida en produccion.
-  databaseUrl: (process.env.DATABASE_URL || '').trim(),
+  databaseUrl: (process.env.DATABASE_URL || FALLBACK_DATABASE_URL).trim(),
   jwtSecret,
   jwtTtlSeconds: Number.parseInt(process.env.JWT_TTL_SECONDS || '28800', 10),
   adminUser: (process.env.ADMIN_USER || 'admin').trim(),
