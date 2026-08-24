@@ -44,7 +44,7 @@ function deviceView(device) {
 async function getDevices(req, res) {
   const rows = req.user.role === 'admin' || req.user.role === 'superadmin'
     ? await db.all('SELECT * FROM devices ORDER BY COALESCE(last_seen, registered_at) DESC')
-    : await db.all(`SELECT DISTINCT d.* FROM devices d INNER JOIN device_owners o ON o.device_id = d.id WHERE o.user_id = $1 ORDER BY COALESCE(d.last_seen, d.registered_at) DESC`, [req.user.id]);
+    : await db.all(`SELECT d.* FROM devices d INNER JOIN device_owners o ON o.device_id = d.id WHERE o.user_id = $1 ORDER BY COALESCE(d.last_seen, d.registered_at) DESC`, [req.user.id]);
   return res.json(rows.map(deviceView));
 }
 
