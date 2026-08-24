@@ -79,6 +79,13 @@ app.get('/health', async (req, res) => {
 
 app.use('/api', routes);
 
+// Última versión de la app para la actualización desde la APK.
+const { LATEST_APP } = require('./constants');
+app.get('/api/version', (req, res) => {
+  const apkUrl = `${config.publicDashboardUrl}/downloads/centinela-os-universal.apk`;
+  return res.json({ ...LATEST_APP, apkUrl });
+});
+
 // Estaticos publicos: cache de 1 dia para activos versionados por contenido
 // (css/js/svg). Las carpetas uploads/receipts/downloads se sirven sin cache
 // para no entregar contenido sensible obsoleto ni romper descargas nuevas.

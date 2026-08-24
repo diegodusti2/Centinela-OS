@@ -9,4 +9,12 @@ const PLANS = Object.freeze({
 const SAFE_COMMANDS = Object.freeze(['loc', 'tra', 'son', 'sil', 'par', 'es', 'lock', 'activate', 'profile', 'foto', 'video']);
 const BLOCKED_COMMANDS = Object.freeze(['pantalla', 'audio']);
 
-module.exports = { PLANS, SAFE_COMMANDS, BLOCKED_COMMANDS };
+// Última versión publicada de la app (para la actualización desde la app).
+// Se compara contra el build number de la APK instalada.
+const LATEST_APP = Object.freeze({
+  version: '1.2.1',
+  build: 6015,
+  changelog: 'Actualización desde la app: aviso de nuevas versiones.',
+});
+
+module.exports = { PLANS, SAFE_COMMANDS, BLOCKED_COMMANDS, LATEST_APP };
