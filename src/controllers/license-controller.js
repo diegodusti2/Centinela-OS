@@ -104,6 +104,7 @@ async function deviceStatus(req, res) {
   return res.json({
     active: true,
     expiresAt: row.expires_at,
+    issuedAt: row.issued_at || row.created_at,
     licenseCode: row.code,
     pendingSetup: Boolean(user && user.setup_pending === 1),
     username: user ? user.username : null,
