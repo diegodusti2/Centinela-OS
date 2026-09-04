@@ -94,6 +94,27 @@ function requireAdmin(req, res, next) {
   return next();
 }
 
+function requireStore(req, res, next) {
+  if (!req.user || req.user.role !== 'store') {
+    return res.status(403).json({ error: 'Solo tiendas', code: 'forbidden' });
+  }
+  return next();
+}
+
+function requireAdminOrStore(req, res, next) {
+  if (!req.user || (req.user.role !== 'admin' && req.user.role !== 'superadmin' && req.user.role !== 'store')) {
+    return res.status(403).json({ error: 'Solo administrador o tienda', code: 'forbidden' });
+  }
+  return next();
+}
+
+function blockStoreSensitive(req, res, next) {
+  if (req.user && req.user.role === 'store') {
+    return res.status(403).json({ error: 'Las tiendas no tienen acceso a datos sensibles de ubicación', code: 'forbidden_store' });
+  }
+  return next();
+}
+
 async function userOwnsDevice(user, deviceId) {
   if (user.role === 'admin' || user.role === 'superadmin') return true;
   const row = await db.get('SELECT 1 FROM device_owners WHERE device_id = $1 AND user_id = $2', [deviceId, user.id]);
@@ -117,4 +138,4 @@ async function requireDeviceAccess(req, res, next) {
   return res.status(403).json({ error: 'No tienes acceso a este dispositivo', code: 'forbidden' });
 }
 
-module.exports = { authenticateUser, authenticateDeviceOrUser, authenticateDevice, requireAdmin, requireDeviceAccess, userOwnsDevice };
+module.exports = { authenticateUser, authenticateDeviceOrUser, authenticateDevice, requireAdmin, requireStore, requireAdminOrStore, blockStoreSensitive, requireDeviceAccess, userOwnsDevice };

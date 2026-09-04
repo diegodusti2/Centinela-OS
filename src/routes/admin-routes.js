@@ -13,5 +13,8 @@ router.post('/registrations/:id/approve', asyncHandler(registration.approve));
 router.post('/registrations/:id/reject', asyncHandler(registration.reject));
 router.delete('/users/:id', asyncHandler(admin.deleteUser));
 router.post('/reset-password/:id', asyncHandler(admin.resetPassword));
+router.post('/stores', asyncHandler(admin.createStore));
+router.get('/stores', asyncHandler(admin.listStores));
+router.delete('/stores/:id', asyncHandler(admin.deleteStore));
 
 module.exports = router;

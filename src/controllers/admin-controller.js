@@ -50,4 +50,47 @@ async function resetPassword(req, res) {
   return res.json({ success: true, id, username: user.username, email: user.email, password });
 }
 
-module.exports = { stats, users, deleteUser, resetPassword };
+async function createStore(req, res) {
+  const { text, email } = require('../utils/validation');
+  const name = text(req.body.name, 'name', { max: 120 });
+  const username = text(req.body.username, 'username', { max: 80 });
+  const userEmail = email(req.body.email);
+  const rawPassword = text(req.body.password, 'password', { max: 128 });
+  if (rawPassword.length < 8) throw new HttpError(400, 'La contraseña debe tener al menos 8 caracteres', 'validation_error');
+  if (!/^[a-zA-Z0-9._-]{3,80}$/.test(username)) throw new HttpError(400, 'Username solo letras, numeros, punto, guion', 'validation_error');
+  const exists = await db.get('SELECT id FROM users WHERE lower(username) = lower($1) OR lower(email) = lower($2)', [username, userEmail]);
+  if (exists) throw new HttpError(409, 'Usuario o email ya existe', 'conflict');
+  const result = await db.run('INSERT INTO users (name, username, email, password_hash, role) VALUES ($1,$2,$3,$4,\'store\') RETURNING id', [name, username, userEmail, hashPassword(rawPassword)]);
+  const created = await db.get('SELECT * FROM users WHERE id = $1', [result.lastInsertRowid]);
+  return res.status(201).json({ success: true, store: publicUser(created) });
+}
+
+async function listStores(req, res) {
+  const rows = await db.all("SELECT * FROM users WHERE role = 'store' ORDER BY created_at DESC LIMIT $1", [limit(req.query.limit, 100)]);
+  return res.json({ stores: rows.map(publicUser) });
+}
+
+async function deleteStore(req, res) {
+  const id = integer(req.params.id, 'id', { min: 1 });
+  const store = await db.get("SELECT id FROM users WHERE id = $1 AND role = 'store'", [id]);
+  if (!store) throw new HttpError(404, 'Tienda no encontrada', 'store_not_found');
+  await db.run('DELETE FROM users WHERE id = $1', [id]);
+  return res.json({ success: true, id, deleted: true });
+}
+
+async function storeStats(req, res) {
+  const totalClients = (await db.get("SELECT COUNT(*) AS count FROM users WHERE role IN ('client','user')")).count;
+  const pendingRegistrations = (await db.get("SELECT COUNT(*) AS count FROM registrations WHERE status = 'pending'")).count;
+  const totalLicenses = (await db.get('SELECT COUNT(*) AS count FROM licenses')).count;
+  const activeLicenses = (await db.get("SELECT COUNT(*) AS count FROM licenses WHERE status = 'active' AND expires_at > NOW()")).count;
+  const totalStores = (await db.get("SELECT COUNT(*) AS count FROM users WHERE role = 'store'")).count;
+  return res.json({
+    totalClients: Number(totalClients),
+    pendingRegistrations: Number(pendingRegistrations),
+    totalLicenses: Number(totalLicenses),
+    activeLicenses: Number(activeLicenses),
+    totalStores: Number(totalStores),
+  });
+}
+
+module.exports = { stats, users, deleteUser, resetPassword, createStore, listStores, deleteStore, storeStats };

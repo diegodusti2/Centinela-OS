@@ -108,6 +108,7 @@ app.get('/reset', (req, res) => res.sendFile(path.join(config.projectRoot, 'publ
 app.get('/download', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'downloads.html')));
 app.get('/manual-samsung', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'manual-samsung.html')));
 app.get('/dashboard', dashboardCsp, (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'dashboard.html')));
+app.get('/store', dashboardCsp, (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'store.html')));
 app.get('/about', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'about.html')));
 app.get('/', (req, res) => res.sendFile(path.join(config.projectRoot, 'public', 'index.html')));
 

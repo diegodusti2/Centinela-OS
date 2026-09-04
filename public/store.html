@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Centinela OS | CRM Tienda</title>
+<link rel="stylesheet" href="/dashboard.css">
+<style>
+.store-badge{background:#FF8C00;color:#fff}
+.sensitive-block{padding:22px;background:#fff8e6;border:1px dashed #ffb02e;border-radius:12px;color:#7a4a00;font-size:14px}
+.sensitive-block strong{display:block;color:#d46b00;margin-bottom:6px}
+</style>
+</head>
+<body>
+<div id="loginPage" class="login-page">
+<div class="login-box">
+<img class="login-mark" src="/brand-mark.svg" alt="">
+<h1>CENTINELA OS — TIENDA</h1>
+<p>CRM exclusivo para tiendas de celulares</p>
+<label for="user">Usuario tienda</label><input id="user" type="text" placeholder="usuario_tienda" autocomplete="username">
+<label for="pass">Contrasena</label><input id="pass" type="password" autocomplete="current-password">
+<button data-action="login">Entrar a mi tienda</button><p class="error" id="loginErr"></p>
+<p style="text-align:center;margin-top:10px;font-size:11px;color:#7b8799">Acceso restringido. Solo cuentas con rol <b>store</b>. Solicita tu alta al administrador.</p>
+</div></div>
+
+<div id="app" class="hidden app">
+<header class="topbar">
+<div class="brand"><img class="brand-mark" src="/brand-mark.svg" alt=""><div class="brand-copy"><strong>CENTINELA OS</strong><span>Portal Tienda — Ventas y Licencias</span></div></div>
+<div class="top-actions"><div class="user-pill"><span id="userLabel"></span><span id="roleBadge" class="role-badge store-badge">TIENDA</span></div><button class="top-btn" data-action="logout">Cerrar sesion</button></div>
+</header>
+
+<div class="page-intro"><div><div class="eyebrow">CRM Tienda</div><h1>Gestion de ventas</h1><p>Registra telefonos, cobra y habilita licencias. Sin acceso a datos sensibles.</p></div>
+<div class="intro-meta"><strong id="storeRealtime">Tienda activa</strong>Sin acceso a ubicacion</div></div>
+
+<div class="kpi-grid" id="kpi"></div>
+
+<div class="card"><div class="card-head"><h3>Registrar telefono / cliente</h3></div>
+<div class="form-row"><input id="regNm" type="text" placeholder="Nombre cliente"><input id="regEm" type="email" placeholder="Email cliente"><input id="regPh" type="text" placeholder="Telefono cliente"><input id="regDid" type="text" placeholder="ID Dispositivo (del telefono)"><select id="regPlan"><option value="1">1 mes - $3</option><option value="6">6 meses - $15</option><option value="12">12 meses - $24</option></select><button data-action="reg-client">Registrar telefono</button></div><div id="regRes" class="card-sub"></div>
+</div>
+
+<div class="card"><div class="card-head"><h3>Solicitudes pendientes de pago</h3><span class="status status-pending" id="pendCount">0</span></div><div id="pendList"></div></div>
+
+<div class="grid2"><div class="card"><div class="card-head"><h3>Licencias</h3></div><div id="licList"></div></div>
+<div class="card"><div class="card-head"><h3>Generar licencia directa</h3></div><div class="form-row" style="flex-direction:column"><input id="licDid" type="text" placeholder="ID Dispositivo"><input id="licNm" type="text" placeholder="Nombre cliente"><input id="licEm" type="email" placeholder="Email cliente"><select id="licDur"><option value="1">1 mes - $3</option><option value="6">6 meses - $15</option><option value="12">12 meses - $24</option></select><button data-action="gen-lic">Generar y habilitar licencia</button></div><div id="licRes"></div></div></div>
+
+<div class="card"><div class="card-head"><h3>Cuentas de clientes de la tienda</h3></div><div id="cliList"></div></div>
+
+<div class="card"><div class="card-head"><h3>Datos sensibles — Bloqueados</h3></div>
+<div class="sensitive-block"><strong>Acceso restringido por privacidad</strong> Las tiendas <b>no</b> pueden ver ubicacion, recorrido, fotos de intruso, eventos ni enviar comandos remotos. Solo el propietario (cliente) y el administrador tienen acceso. Si necesitas soporte, pide al cliente que comparta su informe desde la app.</div>
+</div>
+
+</div>
+<script src="/store.js"></script>
+</body>
+</html>
