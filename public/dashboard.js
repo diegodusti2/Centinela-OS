@@ -55,16 +55,18 @@ async function createStore(){
    var fd=new FormData(); fd.append('photo',photo);
    try{ await fetch('/api/admin/stores/'+sid+'/photo',{method:'POST',headers:{Authorization:'Bearer '+token},body:fd}); }catch(_){}
   }
-  document.getElementById('storeRes').textContent='Tienda creada: '+r.store.username+' ('+(payload.payoutMode==='store_collects'?'Cobra tienda → paga comisión':'Server cobra → comision a tienda')+')';
+  var creds='Usuario: '+r.store.username+' | Clave: '+p+' | URL: https://centinela-os.onrender.com/store';
+  document.getElementById('storeRes').innerHTML='<div class="creds"><b style="color:#15925e">✓ Tienda creada: '+esc(r.store.username)+'</b><br><span style="font-family:monospace">Usuario: <b>'+esc(r.store.username)+'</b> — Contraseña: <b>'+esc(p)+'</b></span><br>URL: <b>https://centinela-os.onrender.com/store</b> <span style="font-size:11px;color:#7b8799">('+esc(payload.payoutMode==='store_collects'?'Tienda cobra → paga '+(payload.commissionRate||20)+'% al server':'Server cobra → paga '+(payload.commissionRate||20)+'% a tienda')+')</span><br><button class="btn-sm btn-blue" onclick="navigator.clipboard.writeText(\''+creds.replace(/'/g,"\\'")+'\');this.textContent=\'Copiado ✓\'">Copiar credenciales</button> <a class="btn-sm btn-green" href="https://wa.me/?text='+encodeURIComponent('🔐 Acceso Tienda Centinela OS\nUsuario: '+r.store.username+'\nClave: '+p+'\nURL: https://centinela-os.onrender.com/store')+'" target="_blank">Enviar por WhatsApp</a> <span style="font-size:11px;color:#d94b4b">Guarda la clave: no se puede recuperar, solo restablecer.</span></div>';
   loadStores();
  }catch(x){ document.getElementById('storeRes').textContent='Error: '+x.message; }
 }
 async function loadStores(){try{var d=await api('/api/admin/stores');document.getElementById('storeList').innerHTML=(d.stores||[]).map(function(s){
  var photo=s.storePhotoUrl?'<img src="'+esc(s.storePhotoUrl)+'" style="width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid #e5ebf3">':'<div style="width:42px;height:42px;border-radius:50%;background:#eef3f9;display:grid;place-items:center">🏪</div>';
- var payout=s.payoutMode==='store_collects'?'Tienda cobra → paga '+(s.commissionRate||20)+'% al server':'Server cobra → paga '+(s.commissionRate||20)+'% a tienda';
- return '<div class="list-item" style="align-items:flex-start"><div style="display:flex;gap:10px;flex:1">'+photo+'<div class="info" style="flex:1"><b>'+esc(s.username)+' — '+esc(s.name)+'</b><span>'+esc(s.email)+' · '+esc(s.phone||'')+'</span><span style="font-size:12px;color:#7b8799">'+esc(s.storeAddress||'Sin dirección')+' | Depósito: '+esc(s.depositBank||'-')+' '+esc(s.depositAccount||'')+' ('+esc(s.depositHolder||'-')+')</span><span style="font-size:11px;color:#3478f6">'+esc(payout)+'</span></div></div><div class="actions" style="flex-direction:column"><button class="btn-sm btn-red" data-action="del-store" data-id="'+s.id+'">Eliminar</button></div></div>';
+  var payout=s.payoutMode==='store_collects'?'Tienda cobra → paga '+(s.commissionRate||20)+'% al server':'Server cobra → paga '+(s.commissionRate||20)+'% a tienda';
+ return '<div class="list-item" style="align-items:flex-start"><div style="display:flex;gap:10px;flex:1">'+photo+'<div class="info" style="flex:1"><b>'+esc(s.username)+' — '+esc(s.name)+'</b><span>'+esc(s.email)+' · '+esc(s.phone||'')+'</span><span style="font-size:12px;color:#7b8799">'+esc(s.storeAddress||'Sin dirección')+' | Depósito: '+esc(s.depositBank||'-')+' '+esc(s.depositAccount||'')+' ('+esc(s.depositHolder||'-')+')</span><span style="font-size:11px;color:#3478f6">'+esc(payout)+'</span></div></div><div class="actions" style="flex-direction:column"><button class="btn-sm btn-blue" data-action="rst-store" data-id="'+s.id+'">Reset clave</button><button class="btn-sm btn-red" data-action="del-store" data-id="'+s.id+'">Eliminar</button></div></div>';
 }).join('')||'<div class="card-sub">Sin tiendas</div>';}catch(e){}}
 async function delStore(id){if(!confirm('Eliminar tienda #'+id+'?'))return;try{await api('/api/admin/stores/'+id,{method:'DELETE'});loadStores();}catch(e){alert(e.message);}}
+async function rstStore(id){if(!confirm('Resetear contraseña de tienda #'+id+'? Se generará una nueva.'))return;try{var r=await api('/api/admin/reset-password/'+id,{method:'POST'});alert('Nueva clave para '+r.username+':\n'+r.password+'\n\nCompártela con el encargado.');}catch(e){alert(e.message);}}
 var _origLoadAdmin=loadAdmin; loadAdmin=async function(){await _origLoadAdmin(); loadStores();};
 
 function showQR(){document.getElementById('qrModal').classList.remove('hidden')}
@@ -95,6 +97,7 @@ document.addEventListener('click',function(e){
   else if(a==='rst-pw')rstPw(t.getAttribute('data-id'));
   else if(a==='create-store')createStore();
   else if(a==='del-store')delStore(t.getAttribute('data-id'));
+  else if(a==='rst-store')rstStore(t.getAttribute('data-id'));
   else if(a==='sel-device'){uid=t.getAttribute('data-id');loadDevice()}
   else if(a==='toggle-incident'){var b=t.nextElementSibling;if(b){var o=b.classList.toggle('hidden');t.classList.toggle('open',!o)}}
   else if(a==='open-photo'){var u=t.getAttribute('data-url');if(/^(\/|https?:\/\/)/.test(u))window.open(u,'_blank')}

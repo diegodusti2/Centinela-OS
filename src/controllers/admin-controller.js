@@ -43,11 +43,11 @@ async function deleteUser(req, res) {
 
 async function resetPassword(req, res) {
   const id = integer(req.params.id, 'id', { min: 1 });
-  const user = await db.get("SELECT * FROM users WHERE id = $1 AND role IN ('client', 'user')", [id]);
-  if (!user) throw new HttpError(404, 'Cliente no encontrado', 'user_not_found');
+  const user = await db.get("SELECT * FROM users WHERE id = $1 AND role IN ('client', 'user', 'store')", [id]);
+  if (!user) throw new HttpError(404, 'Cliente/Tienda no encontrado', 'user_not_found');
   const password = randomPassword();
   await db.run('UPDATE users SET password_hash = $1, setup_pending = 0 WHERE id = $2', [hashPassword(password), id]);
-  return res.json({ success: true, id, username: user.username, email: user.email, password });
+  return res.json({ success: true, id, username: user.username, email: user.email, password, role: user.role });
 }
 
 async function createStore(req, res) {
