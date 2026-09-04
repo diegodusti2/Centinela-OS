@@ -43,8 +43,27 @@ async function regClient(){var n=document.getElementById('regNm').value,e=docume
 async function delLic(id){if(!confirm('Eliminar licencia #'+id+'?'))return;try{await api('/api/licenses/'+id,{method:'DELETE'});loadAdmin()}catch(e){alert(e.message)}}
 async function delCli(id){if(!confirm('Eliminar cliente #'+id+'?'))return;try{await api('/api/admin/users/'+id,{method:'DELETE'});loadAdmin()}catch(e){alert(e.message)}}
 async function rstPw(id){if(!confirm('Restablecer contrasena del cliente #'+id+'?'))return;try{var r=await api('/api/admin/reset-password/'+id,{method:'POST'});alert('Nueva contrasena para '+r.username+'\nEmail: '+r.email+'\n\nContrasena: '+r.password)}catch(e){alert(e.message)}}
-async function createStore(){var n=document.getElementById('storeNm').value,u=document.getElementById('storeUser').value,e=document.getElementById('storeEm').value,p=document.getElementById('storePw').value;if(!n||!u||!e||!p)return alert('Completa todos los campos de tienda');try{var r=await api('/api/admin/stores',{method:'POST',body:JSON.stringify({name:n,username:u,email:e,password:p})});document.getElementById('storeRes').textContent='Tienda creada: '+r.store.username;loadStores();}catch(x){document.getElementById('storeRes').textContent='Error: '+x.message;}}
-async function loadStores(){try{var d=await api('/api/admin/stores');document.getElementById('storeList').innerHTML=(d.stores||[]).map(function(s){return '<div class="list-item"><div class="info"><b>'+esc(s.username)+' — '+esc(s.name)+'</b><span>'+esc(s.email)+'</span></div><div class="actions"><button class="btn-sm btn-red" data-action="del-store" data-id="'+s.id+'">Eliminar</button></div></div>'}).join('')||'<div class="card-sub">Sin tiendas</div>';}catch(e){}}
+async function createStore(){
+ var n=document.getElementById('storeNm').value,u=document.getElementById('storeUser').value,e=document.getElementById('storeEm').value,p=document.getElementById('storePw').value;
+ if(!n||!u||!e||!p) return alert('Completa nombre, usuario, email y contraseña');
+ var payload={name:n,username:u,email:e,password:p, storeAddress:document.getElementById('storeAddress').value, storePhone:document.getElementById('storePhone').value, depositBank:document.getElementById('storeBank').value, depositAccount:document.getElementById('storeAccount').value, depositHolder:document.getElementById('storeHolder').value, commissionRate:parseFloat(document.getElementById('storeCommission').value)||20, payoutMode:document.getElementById('storePayout').value, storeNotes:document.getElementById('storeNotes').value };
+ try{
+  var r=await api('/api/admin/stores',{method:'POST',body:JSON.stringify(payload)});
+  var sid=r.store.id;
+  var photo=document.getElementById('storePhoto').files[0];
+  if(photo){
+   var fd=new FormData(); fd.append('photo',photo);
+   try{ await fetch('/api/admin/stores/'+sid+'/photo',{method:'POST',headers:{Authorization:'Bearer '+token},body:fd}); }catch(_){}
+  }
+  document.getElementById('storeRes').textContent='Tienda creada: '+r.store.username+' ('+(payload.payoutMode==='store_collects'?'Cobra tienda → paga comisión':'Server cobra → comision a tienda')+')';
+  loadStores();
+ }catch(x){ document.getElementById('storeRes').textContent='Error: '+x.message; }
+}
+async function loadStores(){try{var d=await api('/api/admin/stores');document.getElementById('storeList').innerHTML=(d.stores||[]).map(function(s){
+ var photo=s.storePhotoUrl?'<img src="'+esc(s.storePhotoUrl)+'" style="width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid #e5ebf3">':'<div style="width:42px;height:42px;border-radius:50%;background:#eef3f9;display:grid;place-items:center">🏪</div>';
+ var payout=s.payoutMode==='store_collects'?'Tienda cobra → paga '+(s.commissionRate||20)+'% al server':'Server cobra → paga '+(s.commissionRate||20)+'% a tienda';
+ return '<div class="list-item" style="align-items:flex-start"><div style="display:flex;gap:10px;flex:1">'+photo+'<div class="info" style="flex:1"><b>'+esc(s.username)+' — '+esc(s.name)+'</b><span>'+esc(s.email)+' · '+esc(s.phone||'')+'</span><span style="font-size:12px;color:#7b8799">'+esc(s.storeAddress||'Sin dirección')+' | Depósito: '+esc(s.depositBank||'-')+' '+esc(s.depositAccount||'')+' ('+esc(s.depositHolder||'-')+')</span><span style="font-size:11px;color:#3478f6">'+esc(payout)+'</span></div></div><div class="actions" style="flex-direction:column"><button class="btn-sm btn-red" data-action="del-store" data-id="'+s.id+'">Eliminar</button></div></div>';
+}).join('')||'<div class="card-sub">Sin tiendas</div>';}catch(e){}}
 async function delStore(id){if(!confirm('Eliminar tienda #'+id+'?'))return;try{await api('/api/admin/stores/'+id,{method:'DELETE'});loadStores();}catch(e){alert(e.message);}}
 var _origLoadAdmin=loadAdmin; loadAdmin=async function(){await _origLoadAdmin(); loadStores();};
 

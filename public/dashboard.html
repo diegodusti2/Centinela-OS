@@ -39,7 +39,10 @@
 </div>
 <div class="grid2"><div class="card"><div class="card-head"><h3>Licencias</h3></div><div id="licList"></div></div><div class="card"><div class="card-head"><h3>Clientes</h3></div><div id="cliList"></div></div></div>
 <div class="card"><div class="card-head"><h3>Tiendas — CRM</h3><span class="card-sub">Cuentas con acceso limitado (sin ubicacion)</span></div>
-<div class="form-row"><input id="storeNm" type="text" placeholder="Nombre tienda"><input id="storeUser" type="text" placeholder="Usuario"><input id="storeEm" type="email" placeholder="Email"><input id="storePw" type="password" placeholder="Contraseña"><button data-action="create-store">Crear tienda</button></div><div id="storeRes" class="card-sub"></div><div id="storeList" style="margin-top:12px"></div></div>
+<div class="form-row"><input id="storeNm" type="text" placeholder="Nombre tienda / Encargado"><input id="storeUser" type="text" placeholder="Usuario"><input id="storeEm" type="email" placeholder="Email"><input id="storePw" type="password" placeholder="Contraseña (8+)"></div>
+<div class="form-row"><input id="storeAddress" type="text" placeholder="Dirección tienda / Registro"><input id="storePhone" type="text" placeholder="Tel. encargado"><input id="storePhoto" type="file" accept="image/*" style="flex:1"></div>
+<div class="form-row" style="background:#f8fafc;padding:10px;border-radius:9px;border:1px dashed #cbd5e1"><input id="storeBank" type="text" placeholder="Banco"><input id="storeAccount" type="text" placeholder="N° Cuenta depósito"><input id="storeHolder" type="text" placeholder="Titular cuenta"><select id="storeCommission" title="Comisión tienda"><option value="20">Comisión 20%</option><option value="15">15%</option><option value="25">25%</option><option value="30">30%</option></select><select id="storePayout"><option value="store_collects">Tienda cobra → paga comisión al server mensual</option><option value="server_collects">Server cobra → paga comisión a tienda por teléfono mensual</option></select></div>
+<div class="form-row"><input id="storeNotes" type="text" placeholder="Notas / info registro" style="flex:2"><button data-action="create-store">Crear tienda</button></div><div id="storeRes" class="card-sub"></div><div id="storeList" style="margin-top:12px"></div></div>
 </main>
 
 <main id="clientTab" class="hidden">

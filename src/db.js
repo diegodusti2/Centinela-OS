@@ -225,6 +225,17 @@ let initialized = false;
 async function init() {
   if (initialized) return true;
   await getPool().query(SCHEMA);
+  // Migración para tiendas: añade columnas si no existen (compat con DBs ya creadas)
+  await getPool().query(`
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS store_photo_url TEXT NOT NULL DEFAULT '';
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS store_address TEXT NOT NULL DEFAULT '';
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS store_deposit_bank TEXT NOT NULL DEFAULT '';
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS store_deposit_account TEXT NOT NULL DEFAULT '';
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS store_deposit_holder TEXT NOT NULL DEFAULT '';
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS store_commission_rate REAL NOT NULL DEFAULT 20;
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS store_payout_mode TEXT NOT NULL DEFAULT 'store_collects';
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS store_notes TEXT NOT NULL DEFAULT '';
+  `);
   initialized = true;
   return true;
 }
